@@ -1,3 +1,11 @@
+# IntelliJ IDEA
+.idea
+*.iml
+
+# Project
+target
+*.properties
+
 # Compiled class file
 *.class
 
