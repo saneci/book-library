@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${'Карточка читателя ' + person.getName()}">Карточка читателя</title>
+    <style>
+        .inline-block-buttons form {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h3>Карточка читателя</h3>
+    <p th:text="${person.getName() + ', ' + person.getBirthdayYear() + 'г.р.'}"></p>
+
+    <div class="inline-block-buttons">
+        <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+            <input type="submit" value="Обновить"/>
+        </form>
+        <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+            <input type="submit" value="Удалить"/>
+        </form>
+    </div>
+    <br>
+    <hr>
+    <div>
+        <a href="/people">Вернуться к списку читателей</a>
+    </div>
+</body>
+</html>
