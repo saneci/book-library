@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление новой книги</title>
+    <style>
+        .book-validation-error div {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h3>Добавление новой книги</h3>
+
+    <form class="book-validation-error" th:method="POST" th:action="@{/book}" th:object="${book}">
+        <label for="name">Введите название книги:</label>
+        <input id="name" type="text" th:field="*{title}"/>
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</div>
+        <br>
+        <label for="author">Введите автора:</label>
+        <input id="author" type="text" th:field="*{author}">
+        <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Error</div>
+        <br>
+        <label for="publishYear">Введите дату публикации:</label>
+        <input id="publishYear" type="text" th:field="*{publishYear}">
+        <div th:if="${#fields.hasErrors('publishYear')}" th:errors="*{publishYear}">Error</div>
+        <br><br>
+        <input type="submit" value="Добавить книгу"/>
+    </form>
+    <br>
+    <hr>
+    <div>
+        <a href="/book/all">Вернуться к списку книг</a>
+    </div>
+</body>
+</html>
