@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${'Карточка читателя ' + person.getName()}">Карточка читателя</title>
+    <style>
+        .inline-block-buttons form {
+            display: inline-block;
+        }
+        .inline-link-items a {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h3>Карточка читателя</h3>
+    <p th:text="${person.getName() + ', ' + person.getBirthdayYear() + 'г.р.'}"></p>
+    <p th:if="${bookList.isEmpty()}" th:text="'Человек пока не взял не одной книги'"></p>
+    <div th:if="${!bookList.isEmpty()}">
+        <h4>Книги:</h4>
+        <ul th:each="book : ${bookList}">
+            <li th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getPublishYear()}"></li>
+        </ul>
+    </div>
+    <br>
+    <hr>
+    <div class="inline-block-buttons">
+        <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+            <input type="submit" value="Обновить"/>
+        </form>
+        <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+            <input type="submit" value="Удалить"/>
+        </form>
+    </div>
+    <br>
+    <hr>
+    <div class="inline-link-items">
+        <a href="/">На главную</a> /
+        <a href="/people">К списку читателей</a>
+    </div>
+</body>
+</html>

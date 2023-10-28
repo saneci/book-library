@@ -36,3 +36,7 @@
 
 1. Установить [Tomcat](https://tomcat.apache.org/download-10.cgi) 
 2. Настроить IDE для работы с Tomcat ([инструкция](https://www.jetbrains.com/idea/guide/tutorials/working-with-apache-tomcat/using-existing-application/))
+3. Запустить Tomcat
+4. Перейти на главную страницу приложения по адресу [localhost:8080](http://localhost:8080)
+
+    ![alt text](https://github.com/saneci/book-library/blob/master/src/main/resources/img/main_page.jpg?raw=true)
