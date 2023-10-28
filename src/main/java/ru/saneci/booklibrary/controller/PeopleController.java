@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.saneci.booklibrary.dao.BookDAO;
 import ru.saneci.booklibrary.dao.PersonDAO;
 import ru.saneci.booklibrary.model.Person;
 
@@ -26,9 +27,11 @@ public class PeopleController {
     private static final String REDIRECT_TO_PEOPLE = "redirect:/people";
 
     private final PersonDAO personDAO;
+    private final BookDAO bookDAO;
 
-    public PeopleController(PersonDAO personDAO) {
+    public PeopleController(PersonDAO personDAO, BookDAO bookDAO) {
         this.personDAO = personDAO;
+        this.bookDAO = bookDAO;
     }
 
     @GetMapping
@@ -39,7 +42,10 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String getReaderById(@PathVariable("id") int id, Model model) {
-        personDAO.findById(id).ifPresent(person -> model.addAttribute("person", person));
+        personDAO.findById(id).ifPresent(person -> {
+            model.addAttribute("person", person);
+            model.addAttribute("bookList", bookDAO.findAllByPersonId(person.getId()));
+        });
         return PERSON_VIEW;
     }
 
