@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.saneci.booklibrary.dao.BookDAO;
+import ru.saneci.booklibrary.dao.PersonDAO;
 import ru.saneci.booklibrary.model.Book;
+import ru.saneci.booklibrary.model.Person;
 
 @Controller
 @RequestMapping("book")
@@ -25,12 +27,15 @@ public class BookController {
     private static final String BOOK_UPDATING_VIEW = "book/update";
 
     private static final String REDIRECT_TO_BOOK_ALL = "redirect:/book/all";
+    private static final String REDIRECT_TO_BOOK_ITEM = "redirect:/book/{id}";
 
     private final BookDAO bookDAO;
+    private final PersonDAO personDAO;
 
     @Autowired
-    public BookController(BookDAO bookDAO) {
+    public BookController(BookDAO bookDAO, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
+        this.personDAO = personDAO;
     }
 
     @GetMapping("/new")
@@ -54,9 +59,31 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public String getBookById(@PathVariable("id") int id, Model model) {
-        bookDAO.findById(id).ifPresent(book -> model.addAttribute("book", book));
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public String getBookById(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
+        bookDAO.findById(id).ifPresent(book -> {
+            model.addAttribute("book", book);
+
+            if (book.getPersonId() == null) {
+                model.addAttribute("people", personDAO.findAll());
+            } else {
+                model.addAttribute("personName", personDAO.findById(book.getPersonId()).get().getName());
+            }
+        });
+
         return BOOK_ITEM_VIEW;
+    }
+
+    @PatchMapping("{bookId}/assign")
+    public String assignBookToTheReader(@PathVariable("bookId") int bookId, @ModelAttribute("person") Person person) {
+        bookDAO.updatePersonId(bookId, person.getId());
+        return REDIRECT_TO_BOOK_ITEM.replace("{id}", String.valueOf(bookId));
+    }
+
+    @PatchMapping("{bookId}/release")
+    public String releaseBookFromTheReader(@PathVariable("bookId") int bookId) {
+        bookDAO.updatePersonId(bookId, null);
+        return REDIRECT_TO_BOOK_ITEM.replace("{id}", String.valueOf(bookId));
     }
 
     @GetMapping("/{id}/edit")

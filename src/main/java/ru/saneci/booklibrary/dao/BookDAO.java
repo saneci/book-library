@@ -38,6 +38,11 @@ public class BookDAO {
         jdbcTemplate.update(sql, book.getPersonId(), book.getTitle(), book.getAuthor(), book.getPublishYear(), bookId);
     }
 
+    public void updatePersonId(int bookId, Integer personId) {
+        String sql = "UPDATE book SET person_id=? WHERE id=?";
+        jdbcTemplate.update(sql, personId, bookId);
+    }
+
     public void delete(int bookId) {
         jdbcTemplate.update("DELETE FROM book WHERE id = ?", bookId);
     }
