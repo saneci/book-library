@@ -21,7 +21,7 @@ public class PeopleController {
 
     private static final String PEOPLE_LIST_VIEW = "people/list";
     private static final String PERSON_VIEW = "people/person";
-    private static final String REGISTRATION_VIEW = "people/registration";
+    private static final String NEW_PEOPLE_VIEW = "people/new";
     private static final String UPDATING_VIEW = "people/update";
 
     private static final String REDIRECT_TO_PEOPLE = "redirect:/people";
@@ -49,9 +49,9 @@ public class PeopleController {
         return PERSON_VIEW;
     }
 
-    @GetMapping("/registration")
-    public String getRegistrationView(@ModelAttribute("person") Person person) {
-        return REGISTRATION_VIEW;
+    @GetMapping("/new")
+    public String getNewPeopleView(@ModelAttribute("person") Person person) {
+        return NEW_PEOPLE_VIEW;
     }
 
     @GetMapping("{id}/edit")
@@ -63,7 +63,7 @@ public class PeopleController {
     @PostMapping
     public String createNewReader(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return REGISTRATION_VIEW;
+            return NEW_PEOPLE_VIEW;
         }
         personDAO.save(person);
         return REDIRECT_TO_PEOPLE;
@@ -73,7 +73,7 @@ public class PeopleController {
     public String updateReader(@PathVariable("id") int id, @ModelAttribute("person") @Valid Person person,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return REGISTRATION_VIEW;
+            return NEW_PEOPLE_VIEW;
         }
         personDAO.update(person, id);
         return REDIRECT_TO_PEOPLE;
