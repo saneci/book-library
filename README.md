@@ -1,6 +1,8 @@
 ## Book Library
 
-Учебный проект из курса на Swiftbook.org (Spring - Полный курс. Boot, Hibernate, Security, REST)
+Цифровой учёт книг в библиотеке [^note]
+
+[^note]: Учебный проект из курса на Swiftbook.org (Spring - Полный курс. Boot, Hibernate, Security, REST)
 
 ### Содержание
 
@@ -39,4 +41,4 @@
 3. Запустить Tomcat
 4. Перейти на главную страницу приложения по адресу [localhost:8080](http://localhost:8080)
 
-    ![alt text](https://github.com/saneci/book-library/blob/master/src/main/resources/img/main_page.jpg?raw=true)
+![alt text](https://github.com/saneci/book-library/blob/master/src/main/resources/img/main_page.jpg?raw=true)
