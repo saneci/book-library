@@ -38,8 +38,8 @@ public class BookDAO {
     }
 
     public void update(Book book, int bookId) {
-        String sql = "UPDATE book SET person_id=?, title=?, author=?, publish_year=? WHERE id=?";
-        jdbcTemplate.update(sql, book.getPersonId(), book.getTitle(), book.getAuthor(), book.getPublishYear(), bookId);
+        String sql = "UPDATE book SET title=?, author=?, publish_year=? WHERE id=?";
+        jdbcTemplate.update(sql, book.getTitle(), book.getAuthor(), book.getPublishYear(), bookId);
     }
 
     public void updatePersonId(int bookId, Integer personId) {
