@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${'Карточка читателя ' + person.getName()}">Карточка читателя</title>
     <style>
         .inline-block-buttons form {
@@ -23,8 +23,8 @@
             <li th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getPublishYear()}"></li>
         </ul>
     </div>
-    <br>
-    <hr>
+    <br/>
+    <hr/>
     <div class="inline-block-buttons">
         <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
             <input type="submit" value="Обновить"/>
@@ -33,9 +33,9 @@
             <input type="submit" value="Удалить"/>
         </form>
     </div>
-    <br>
-    <hr>
-    <div class="inline-link-items">
+    <br/>
+    <hr/>
+    <div id="footer" class="inline-link-items">
         <a href="/">На главную</a> /
         <a href="/people">К списку читателей</a>
     </div>

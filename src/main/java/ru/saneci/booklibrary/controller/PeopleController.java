@@ -54,7 +54,7 @@ public class PeopleController {
         return NEW_PEOPLE_VIEW;
     }
 
-    @GetMapping("{id}/edit")
+    @GetMapping("/{id}/edit")
     public String getUpdatingView(@PathVariable("id") int id, Model model) {
         personDAO.findById(id).ifPresent(person -> model.addAttribute("person", person));
         return UPDATING_VIEW;
