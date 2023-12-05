@@ -18,7 +18,7 @@ import ru.saneci.booklibrary.model.Book;
 import ru.saneci.booklibrary.model.Person;
 
 @Controller
-@RequestMapping("book")
+@RequestMapping("/book")
 public class BookController {
 
     private static final String NEW_BOOK_VIEW = "book/new";
@@ -74,13 +74,13 @@ public class BookController {
         return BOOK_ITEM_VIEW;
     }
 
-    @PatchMapping("{bookId}/assign")
+    @PatchMapping("/{bookId}/assign")
     public String assignBookToTheReader(@PathVariable("bookId") int bookId, @ModelAttribute("person") Person person) {
         bookDAO.updatePersonId(bookId, person.getId());
         return REDIRECT_TO_BOOK_ITEM.replace("{id}", String.valueOf(bookId));
     }
 
-    @PatchMapping("{bookId}/release")
+    @PatchMapping("/{bookId}/release")
     public String releaseBookFromTheReader(@PathVariable("bookId") int bookId) {
         bookDAO.updatePersonId(bookId, null);
         return REDIRECT_TO_BOOK_ITEM.replace("{id}", String.valueOf(bookId));
