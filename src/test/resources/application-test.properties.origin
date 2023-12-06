@@ -1,4 +1,0 @@
-spring.datasource.driver=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://[test_database_host]:[test_database_port]/[test_database_name]
-spring.datasource.username=
-spring.datasource.password=

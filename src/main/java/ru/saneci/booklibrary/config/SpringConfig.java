@@ -22,7 +22,7 @@ import java.util.Objects;
 @Configuration
 @EnableWebMvc
 @ComponentScan({"ru.saneci.booklibrary.controller", "ru.saneci.booklibrary.dao", "ru.saneci.booklibrary.util"})
-@PropertySource("classpath:application-dev.properties")
+@PropertySource("classpath:application.properties")
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
