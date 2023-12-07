@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Список читателей</title>
     <style>
         .inline-link-items a {
@@ -16,9 +16,9 @@
     <div th:each="person : ${people}">
         <a th:href="@{/people/{id}(id=${person.getId()})}" th:text="${person.getName() + ', ' + person.getBirthdayYear()}">Person</a>
     </div>
-    <br>
-    <hr>
-    <div class="inline-link-items">
+    <br/>
+    <hr/>
+    <div id="footer" class="inline-link-items">
         <a href="/">На главную</a> /
         <a href="/people/new">Добавить в базу данных нового читателя</a>
     </div>

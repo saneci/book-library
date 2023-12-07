@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Добавление новой книги</title>
     <style>
         .book-validation-error div {
@@ -20,20 +20,20 @@
         <label for="name">Введите название книги:</label>
         <input id="name" type="text" th:field="*{title}"/>
         <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</div>
-        <br>
+        <br/>
         <label for="author">Введите автора:</label>
-        <input id="author" type="text" th:field="*{author}">
+        <input id="author" type="text" th:field="*{author}"/>
         <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Error</div>
-        <br>
+        <br/>
         <label for="publishYear">Введите дату публикации:</label>
-        <input id="publishYear" type="text" th:field="*{publishYear}">
+        <input id="publishYear" type="text" th:field="*{publishYear}"/>
         <div th:if="${#fields.hasErrors('publishYear')}" th:errors="*{publishYear}">Error</div>
-        <br><br>
+        <br/><br/>
         <input type="submit" value="Добавить книгу"/>
     </form>
-    <br>
-    <hr>
-    <div class="inline-link-items">
+    <br/>
+    <hr/>
+    <div id="footer" class="inline-link-items">
         <a href="/">На главную</a> /
         <a href="/book/all">К списку книг</a>
     </div>

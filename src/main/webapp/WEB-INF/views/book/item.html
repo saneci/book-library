@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${'Карточка книги ' + book.getTitle()}"></title>
     <style>
         .inline-block-buttons form {
@@ -24,7 +24,7 @@
             <select id="person" th:object="${person}" th:field="*{id}">
                 <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName()}"></option>
             </select>
-            <input type="submit" value="Назначить книгу">
+            <input type="submit" value="Назначить книгу"/>
         </form>
     </div>
     <div th:if="${book.getPersonId() != null}">
@@ -33,8 +33,8 @@
             <input type="submit" value="Освободить книгу"/>
         </form>
     </div>
-    <br>
-    <hr>
+    <br/>
+    <hr/>
     <div class="inline-block-buttons">
         <form th:method="GET" th:action="@{/book/{id}/edit(id=${book.getId()})}">
             <input type="submit" value="Обновить"/>
@@ -43,9 +43,9 @@
             <input type="submit" value="Удалить"/>
         </form>
     </div>
-    <br>
-    <hr>
-    <div class="inline-link-items">
+    <br/>
+    <hr/>
+    <div id="footer" class="inline-link-items">
         <a href="/">На главную</a> /
         <a href="/book/all">К списку книг</a>
     </div>
