@@ -17,7 +17,7 @@
     <h3>Карточка книги</h3>
     <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getPublishYear()}"></p>
 
-    <div th:if="${book.getPersonId() == null}">
+    <div th:if="${book.getPerson() == null}">
         Эта книга свободна. Кому её назначить?
         <form th:method="PATCH" th:action="@{/book/{id}/assign(id=${book.getId()})}">
             <label for="person">Выберите человека:</label>
@@ -27,8 +27,8 @@
             <input type="submit" value="Назначить книгу"/>
         </form>
     </div>
-    <div th:if="${book.getPersonId() != null}">
-        <p th:text="${'Книга сейчас у ' + personName}"></p>
+    <div th:if="${book.getPerson() != null}">
+        <p th:text="${'Книга сейчас у ' + book.getPerson().getName()}"></p>
         <form th:method="PATCH" th:action="@{/book/{id}/release(id=${book.getId()})}">
             <input type="submit" value="Освободить книгу"/>
         </form>

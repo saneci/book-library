@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.saneci.booklibrary.dao.BookDAO;
-import ru.saneci.booklibrary.dao.PersonDAO;
-import ru.saneci.booklibrary.model.Person;
+import ru.saneci.booklibrary.domain.Person;
+import ru.saneci.booklibrary.service.PersonService;
 
 @Controller
 @RequestMapping("/people")
@@ -26,26 +25,21 @@ public class PeopleController {
 
     private static final String REDIRECT_TO_PEOPLE = "redirect:/people";
 
-    private final PersonDAO personDAO;
-    private final BookDAO bookDAO;
+    private final PersonService personService;
 
-    public PeopleController(PersonDAO personDAO, BookDAO bookDAO) {
-        this.personDAO = personDAO;
-        this.bookDAO = bookDAO;
+    public PeopleController(PersonService personService) {
+        this.personService = personService;
     }
 
     @GetMapping
     public String getAllReaders(Model model) {
-        model.addAttribute("people", personDAO.findAll());
+        model.addAttribute("people", personService.findAll());
         return PEOPLE_LIST_VIEW;
     }
 
     @GetMapping("/{id}")
-    public String getReaderById(@PathVariable("id") int id, Model model) {
-        personDAO.findById(id).ifPresent(person -> {
-            model.addAttribute("person", person);
-            model.addAttribute("bookList", bookDAO.findAllByPersonId(person.getId()));
-        });
+    public String getReaderById(@PathVariable("id") Long id, Model model) {
+        personService.findPersonWithBooksById(id).ifPresent(person -> model.addAttribute("person", person));
         return PERSON_VIEW;
     }
 
@@ -55,8 +49,8 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String getUpdatingView(@PathVariable("id") int id, Model model) {
-        personDAO.findById(id).ifPresent(person -> model.addAttribute("person", person));
+    public String getUpdatingView(@PathVariable("id") Long id, Model model) {
+        personService.findById(id).ifPresent(person -> model.addAttribute("person", person));
         return UPDATING_VIEW;
     }
 
@@ -65,23 +59,23 @@ public class PeopleController {
         if (bindingResult.hasErrors()) {
             return NEW_PEOPLE_VIEW;
         }
-        personDAO.save(person);
+        personService.save(person);
         return REDIRECT_TO_PEOPLE;
     }
 
     @PatchMapping("/{id}")
-    public String updateReader(@PathVariable("id") int id, @ModelAttribute("person") @Valid Person person,
+    public String updateReader(@ModelAttribute("person") @Valid Person person,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return NEW_PEOPLE_VIEW;
         }
-        personDAO.update(person, id);
+        personService.update(person);
         return REDIRECT_TO_PEOPLE;
     }
 
     @DeleteMapping("/{id}")
-    public String deleteReader(@PathVariable("id") int id) {
-        personDAO.delete(id);
+    public String deleteReader(@PathVariable("id") Long id) {
+        personService.delete(id);
         return REDIRECT_TO_PEOPLE;
     }
 }
