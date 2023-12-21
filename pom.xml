@@ -94,6 +94,14 @@
             <version>8.0.1.Final</version>
         </dependency>
         <dependency>
+            <!-- Need in order to avoid "HV000183: Unable to initialize 'jakarta.el.ExpressionFactory'"
+            hibernate-validator error while load ApplicationContext for integration tests. -->
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <version>5.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>6.4.0.Final</version>

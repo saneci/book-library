@@ -29,6 +29,7 @@ public abstract class BaseControllerTest {
 
     static {
         postgreSQLContainer = new PostgreSQLContainer<>("postgres:16.0")
+                .withReuse(true)
                 // TODO remove withCopyFileToContainer() after create automatic database migrations
                 .withCopyFileToContainer(
                         getDatabaseMigrationFile("r-2023-1/deploy-23-1.sql"),
