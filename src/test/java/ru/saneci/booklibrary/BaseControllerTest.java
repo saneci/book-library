@@ -54,6 +54,9 @@ public abstract class BaseControllerTest {
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.datasource.show_sql", () -> true);
+        registry.add("spring.datasource.format_sql", () -> false);
+        registry.add("spring.datasource.highlight_sql", () -> true);
     }
 
     @BeforeEach
