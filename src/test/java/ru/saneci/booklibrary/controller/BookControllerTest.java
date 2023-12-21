@@ -5,19 +5,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ru.saneci.booklibrary.BaseControllerTest;
 
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Sql(scripts = "/sql/book_controller/create-book.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "/sql/book_controller/truncate-book.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "/sql/book_controller/create-book.sql")
 class BookControllerTest extends BaseControllerTest {
 
     @Test
@@ -32,13 +26,15 @@ class BookControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/sql/book_controller/truncate-book.sql")
     void whenAddNewBook_thenRedirectToBookAllEndpoint() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = post("/book")
+        MockHttpServletRequestBuilder addNewBook = post("/book")
                 .param("title", "Title")
-                .param("author", "Author")
+                .param("author", "Some Test Author")
                 .param("publishYear", "1999");
 
-        mockMvc.perform(requestBuilder)
+        mockMvc.perform(addNewBook)
+                .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/book/all"));
     }
@@ -55,8 +51,7 @@ class BookControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/book_controller/create-three-book.sql", executionPhase = BEFORE_TEST_METHOD)
-    @Sql(scripts = "/sql/book_controller/truncate-book.sql", executionPhase = AFTER_TEST_METHOD)
+    @Sql(scripts = "/sql/book_controller/create-three-books.sql")
     void whenGetAllBooksReturnThreeItems_thenBookListViewShouldContainsThreeLinksInTheCorrespondingDivBlock() throws Exception {
         mockMvc.perform(get("/book/all"))
                 .andExpect(status().isOk())
@@ -75,22 +70,43 @@ class BookControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/people_controller/create-person.sql", executionPhase = BEFORE_TEST_METHOD)
-    @Sql(scripts = "/sql/people_controller/truncate-person.sql", executionPhase = AFTER_TEST_METHOD)
+    @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
     void whenAssignBookToTheReader_thenRedirectToGetBookByIdEndpoint() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = patch("/book/{id}/assign", 1)
-                .param("id", "1"); // personId
-
-        mockMvc.perform(requestBuilder)
+        mockMvc.perform(patch("/book/{id}/assign", 1))
+                .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/book/1"));
     }
 
     @Test
+    @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
+    void whenAssignBookToTheReader_thenBookShouldBeLinkedToThePerson() throws Exception {
+        mockMvc.perform(patch("/book/{id}/assign", 1));
+
+        mockMvc.perform(get("/people/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(xpath("/html/body/div[@id='person-books']/ul/li")
+                        .string("Test Book, Test Author, 1234"));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
     void whenReleaseBookFromTheReader_thenRedirectToGetBookByIdEndpoint() throws Exception {
         mockMvc.perform(patch("/book/{id}/release", 1))
+                .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/book/1"));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
+    void whenReleaseBookFromTheReader_thenBookShouldBeUnlinkedToThePerson() throws Exception {
+        mockMvc.perform(patch("/book/{id}/release", 1));
+
+        mockMvc.perform(get("/people/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(xpath("/html/body/p[2]")
+                        .string("Человек пока не взял не одной книги"));
     }
 
     @Test
@@ -103,15 +119,33 @@ class BookControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
     void whenUpdateBook_thenRedirectToBookAllEndpoint() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = patch("/book/{id}", 1)
-                .param("title", "Title Updated")
-                .param("author", "Author Updated")
+        MockHttpServletRequestBuilder updateBook = patch("/book/{id}", 1)
+                .param("title", "Test Book Updated")
+                .param("author", "Test Author Updated")
                 .param("publishYear", "2000");
 
-        mockMvc.perform(requestBuilder)
+        mockMvc.perform(updateBook)
+                .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/book/all"));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
+    void whenUpdateBook_thenBookShouldBeUpdated() throws Exception {
+        MockHttpServletRequestBuilder updateBook = patch("/book/{id}", 1)
+                .param("title", "Test Book Updated")
+                .param("author", "Test Author Updated")
+                .param("publishYear", "2000");
+
+        mockMvc.perform(updateBook);
+
+        mockMvc.perform(get("/people/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(xpath("/html/body/div/ul/li")
+                        .string("Test Book Updated, Test Author Updated, 2000"));
     }
 
     @Test

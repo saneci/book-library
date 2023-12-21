@@ -5,19 +5,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import ru.saneci.booklibrary.BaseControllerTest;
 
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Sql(scripts = "/sql/people_controller/create-person.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "/sql/people_controller/truncate-person.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "/sql/people_controller/create-person.sql")
 class PeopleControllerTest extends BaseControllerTest {
 
     @Test
@@ -71,12 +65,14 @@ class PeopleControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/sql/people_controller/truncate-person.sql")
     void whenCreateNewReader_thenRedirectToPeopleEndpoint() throws Exception {
-        MockHttpServletRequestBuilder request = post("/people")
+        MockHttpServletRequestBuilder postRequest = post("/people")
                 .param("name", "Test User Name")
-                .param("birthdayYear", "1234");
+                .param("birthdayYear", "1900");
 
-        mockMvc.perform(request)
+        mockMvc.perform(postRequest)
+                .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/people"));
 
@@ -84,11 +80,12 @@ class PeopleControllerTest extends BaseControllerTest {
 
     @Test
     void whenUpdateReader_thenRedirectToPeopleEndpoint() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = patch("/people/{id}", 1)
-                .param("name", "Test User Name Updated")
+        MockHttpServletRequestBuilder updateReader = patch("/people/{id}", 1)
+                .param("name", "Test User Updated")
                 .param("birthdayYear", "12345");
 
-        mockMvc.perform(requestBuilder)
+        mockMvc.perform(updateReader)
+                .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/people"));
     }
