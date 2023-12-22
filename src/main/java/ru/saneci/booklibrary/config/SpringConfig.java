@@ -87,7 +87,6 @@ public class SpringConfig implements WebMvcConfigurer {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.show_sql", env.getRequiredProperty("spring.datasource.show_sql"));
         properties.put("hibernate.format_sql", env.getRequiredProperty("spring.datasource.format_sql"));
         properties.put("hibernate.highlight_sql", env.getRequiredProperty("spring.datasource.highlight_sql"));
 
