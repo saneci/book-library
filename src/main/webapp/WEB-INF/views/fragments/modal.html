@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modal dialog windows</title>
+</head>
+<body>
+<div th:fragment="deleteConfirmationModal(title, action)" id="deleteConfirmationModal" class="modal fade"
+     data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" th:text="${title}">Book Title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4 px-4">
+                <p>Запись будет безвозвратно удалена из базы данных. Продолжить?</p>
+            </div>
+            <div class="modal-footer">
+                <form class="col-auto" th:method="DELETE" th:action="${action}">
+                    <input class="btn btn-outline-danger" role="button" type="submit" value="Да, удалить"/>
+                </form>
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Отменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

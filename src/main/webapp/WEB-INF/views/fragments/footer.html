@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Body footer</title>
+</head>
+<body>
+<footer class="mt-auto py-3 bg-primary-subtle" th:fragment="footer">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol th:replace="fragments/svg :: #github"></symbol>
+        <symbol th:replace="fragments/svg :: #mail"></symbol>
+        <symbol th:replace="fragments/svg :: #telegram"></symbol>
+    </svg>
+
+    <div class="container">
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">На главную</a></li>
+            <li class="nav-item"><a href="https://github.com/saneci/book-library" target="_blank"
+                                    class="nav-link px-2 text-body-secondary">Репозиторий</a></li>
+            <li class="nav-item"><a href="https://github.com/users/saneci/projects/3" target="_blank"
+                                    class="nav-link px-2 text-body-secondary">Проект</a></li>
+            <li class="nav-item"><a href="https://github.com/saneci/book-library/issues" target="_blank"
+                                    class="nav-link px-2 text-body-secondary">Задачи</a></li>
+        </ul>
+        <hr class="pb-2 hr-white"/>
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <p class="text-body-secondary">
+                <span th:text="${'&copy; 2023 - ' + #temporals.format(#temporals.createNow(), 'yyyy')}">2020</span>
+                <span>Saneci Book Library (SB Library), licensed under the</span>
+                <a class="white text-decoration-none" href="https://github.com/saneci/book-library/blob/master/LICENSE"
+                   target="_blank">Apache License, Version 2.0</a>.
+            </p>
+            <ul class="list-unstyled d-flex">
+                <li class="ms-3"><a class="text-body-secondary" href="https://github.com/saneci" target="_blank">
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#github"/>
+                    </svg>
+                </a></li>
+                <li class="ms-3"><a class="text-body-secondary" href="mailto:a.gladskoy@gmail.com" target="_blank">
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#mail"/>
+                    </svg>
+                </a></li>
+                <li class="ms-3"><a class="text-body-secondary" href="https://t.me/saneci" target="_blank">
+                    <svg class="bi" width="24" height="24">
+                        <use xlink:href="#telegram"/>
+                    </svg>
+                </a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

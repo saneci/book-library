@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Body sections</title>
+</head>
+<body>
+<section id="breadcrumb" class="mb-lg-5" th:fragment="breadcrumb(items)">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none" th:insert="fragments/svg :: #houseDoorFill"></svg>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-chevron p-2 bg-body-tertiary rounded-2">
+            <li class="breadcrumb-item">
+                <a class="link-body-emphasis" th:href="@{/}">
+                    <svg class="bi" width="16" height="16">
+                        <use xlink:href="#houseDoorFill"></use>
+                    </svg>
+                    <span class="visually-hidden">Главная</span>
+                </a>
+            </li>
+            <th:block th:replace="${items}"/>
+        </ol>
+    </nav>
+</section>
+<section id="mainContent" class="row justify-content-center" th:fragment="mainContent(items)">
+    <div class="col-lg-9 border rounded">
+        <th:block th:replace="${items}"></th:block>
+    </div>
+</section>
+</body>
+</html>

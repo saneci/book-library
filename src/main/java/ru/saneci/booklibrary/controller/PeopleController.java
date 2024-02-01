@@ -17,6 +17,8 @@ import ru.saneci.booklibrary.domain.Person;
 import ru.saneci.booklibrary.service.PersonService;
 import ru.saneci.booklibrary.util.BindingResultLogger;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
@@ -30,6 +32,9 @@ public class PeopleController {
     private static final String UPDATING_VIEW = "people/update";
 
     private static final String REDIRECT_TO_PEOPLE = "redirect:/people";
+    private static final String REDIRECT_TO_PERSON = "redirect:/people/{id}";
+
+    private static final String ERROR_404 = "error/not-found";
 
     private final PersonService personService;
 
@@ -49,10 +54,18 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String getReaderById(@PathVariable("id") Long id, Model model) {
         log.debug("getReaderById: start processing");
-        personService.findPersonWithBooksById(id).ifPresent(person -> model.addAttribute("person", person));
-        log.debug("getReaderById: finish processing");
+        Optional<Person> person = personService.findPersonWithBooksById(id);
 
-        return PERSON_VIEW;
+        if (person.isPresent()) {
+            model.addAttribute("person", person.get());
+            log.debug("getReaderById: finish processing");
+
+            return PERSON_VIEW;
+        } else {
+            log.debug("getReaderById: finish processing");
+
+            return ERROR_404;
+        }
     }
 
     @GetMapping("/new")
@@ -93,7 +106,7 @@ public class PeopleController {
         personService.update(person);
         log.debug("updateReader: finish processing");
 
-        return REDIRECT_TO_PEOPLE;
+        return REDIRECT_TO_PERSON.replace("{id}", String.valueOf(person.getId()));
     }
 
     @DeleteMapping("/{id}")

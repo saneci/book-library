@@ -1,26 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section})">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Список читателей</title>
-    <style>
-        .inline-link-items a {
-            display: inline-block;
-        }
-    </style>
+    <title th:text="${'Список читателей - SB Library'}"></title>
 </head>
 <body>
-    <h3>Список читателей</h3>
-
-    <div th:each="person : ${people}">
-        <a th:href="@{/people/{id}(id=${person.getId()})}" th:text="${person.getName() + ', ' + person.getBirthdayYear()}">Person</a>
+<section th:replace="fragments/section :: breadcrumb(~{::.breadcrumb-item})">
+    <ol>
+        <li class="breadcrumb-item active" aria-current="page">Список читателей</li>
+    </ol>
+</section>
+<section id="peopleList" class="table-responsive">
+    <div class="mb-3 gap-2 d-lg-flex justify-content-md-end">
+        <a class="btn btn-outline-success" role="button" href="/people/new">Добавить нового читателя</a>
     </div>
-    <br/>
-    <hr/>
-    <div id="footer" class="inline-link-items">
-        <a href="/">На главную</a> /
-        <a href="/people/new">Добавить в базу данных нового читателя</a>
-    </div>
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="text-center">
+        <tr>
+            <th scope="col">Фамилия Имя Отчество</th>
+            <th scope="col">Год рождения</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="position-relative" th:each="person : ${people}">
+            <td><a class="stretched-link link-dark text-decoration-none"
+                   th:href="@{/people/{id}(id=${person.getId()})}" th:text="${person.getName()}">Name</a></td>
+            <td th:text="${person.getBirthdayYear()}">2000</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 </body>
 </html>
