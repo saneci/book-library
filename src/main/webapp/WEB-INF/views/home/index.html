@@ -1,18 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section})">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Реестр книг библиотеки - главная страница</title>
+    <title th:text="${'Главная страница - SB Library'}"></title>
 </head>
 <body>
-    <h3>Основные разделы приложения</h3>
-
-    <ul>
-        <li><a href="/people/new">Добавление нового читателя</a></li>
-        <li><a href="/people">Список читателей</a></li>
-        <li><a href="/book/new">Добавление новой книги</a></li>
-        <li><a href="/book/all">Список книг</a></li>
-    </ul>
+<section id="mainMenu" class="mt-lg-5 px-lg-5">
+    <nav class="row g-4">
+        <div class="mb-lg-4 d-lg-flex justify-content-md-center">
+            <h4 class="text-secondary">Основные разделы приложения</h4>
+        </div>
+        <div class="col-lg-6 mb-lg-3">
+            <a class="d-block text-decoration-none" href="/books">
+                <strong class="d-block h5 mb-0">Книги</strong>
+                <span class="text-secondary">Отображение информации о книгах, их состоянии, назначение человеку,
+                    освобождение и редактирование.</span>
+            </a>
+        </div>
+        <div class="col-lg-6 mb-lg-3">
+            <a class="d-block text-decoration-none" href="/books/new">
+                <strong class="d-block h5 mb-0">Новая книга</strong>
+                <span class="text-secondary">Добавление в базу данных новой книги.</span>
+            </a>
+        </div>
+        <div class="col-lg-6 mb-lg-3">
+            <a class="d-block text-decoration-none" href="/people">
+                <strong class="d-block h5 mb-0">Читатели</strong>
+                <span class="text-secondary">Отображение информации о читателях, наличии у них книг и редактирование
+                    персональных данных.</span>
+            </a>
+        </div>
+        <div class="col-lg-6 mb-lg-3">
+            <a class="d-block text-decoration-none" href="/people/new">
+                <strong class="d-block h5 mb-0">Новый читатель</strong>
+                <span class="text-secondary">Добавление в базу данных нового читателя.</span>
+            </a>
+        </div>
+    </nav>
+</section>
 </body>
 </html>

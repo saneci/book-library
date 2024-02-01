@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section})">
+<head>
+    <title th:text="${'Ошибка 404 - SB Library'}"></title>
+</head>
+<body>
+<section id="pageNotFound" class="row justify-content-center">
+    <div class="card col-lg-9">
+        <div class="card-body py-5">
+            <h5 class="card-title">404 - Запрашиваемый ресурс не найден</h5>
+            <p class="card-text">Возможно во время работы с данной записью она была удалена другим сотрудником или
+                запись не существует.</p>
+        </div>
+        <div class="card-footer py-3">
+            <a class="btn btn-outline-info" type="button" th:href="@{/}">Перейти на главную страницу</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section})">
+<head>
+    <title th:text="${'Обновление данных книги ' + book.getTitle()} + ' - SB Library'"></title>
+</head>
+<body>
+<section th:replace="fragments/section :: breadcrumb(~{::.breadcrumb-item})">
+    <ol>
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis fw-semibold text-decoration-none" th:href="@{/books}">Список книг</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a class="link-body-emphasis fw-semibold text-decoration-none"
+               th:href="@{/books/{id}(id=${book.getId()})}">Карточка книги</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Обновление данных книги</li>
+    </ol>
+</section>
+<section th:replace="fragments/section :: mainContent(~{::form})">
+    <form class="py-5 px-3" th:method="PATCH" th:action="@{/books/{id}(id=${book.getId()})}" th:object="${book}">
+        <div id="nameInput" class="row mb-3">
+            <div class="col-lg-3">
+                <label for="title" class="col-form-label">Название:</label>
+            </div>
+            <div class="col-lg-6">
+                <input id="title" type="text" aria-describedby="titleValidationError" class="form-control"
+                       th:classappend="${#fields.hasErrors('title') ? 'is-invalid' : ''}" th:field="*{title}"/>
+                <div id="titleValidationError" class="invalid-feedback" th:if="${#fields.hasErrors('title')}"
+                     th:errors="*{title}">Error
+                </div>
+            </div>
+        </div>
+        <div id="authorInput" class="row mb-3">
+            <div class="col-lg-3">
+                <label for="author" class="col-form-label">Автор:</label>
+            </div>
+            <div class="col-lg-6">
+                <input id="author" type="text" aria-describedby="authorValidationError" class="form-control"
+                       th:classappend="${#fields.hasErrors('author') ? 'is-invalid' : ''}"
+                       th:field="*{author}"/>
+                <div id="authorValidationError" class="invalid-feedback" th:if="${#fields.hasErrors('author')}"
+                     th:errors="*{author}">Error
+                </div>
+            </div>
+        </div>
+        <div id="publishYearInput" class="row mb-3">
+            <div class="col-lg-3">
+                <label for="publishYear" class="col-form-label">Дата публикации:</label>
+            </div>
+            <div class="col-lg-6">
+                <input id="publishYear" type="text" aria-describedby="publishYearValidationError"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('publishYear') ? 'is-invalid' : ''}"
+                       th:field="*{publishYear}"/>
+                <div id="publishYearValidationError" class="invalid-feedback"
+                     th:if="${#fields.hasErrors('publishYear')}" th:errors="*{publishYear}">Error
+                </div>
+            </div>
+        </div>
+        <input class="btn btn-outline-success" type="submit" value="Обновить"/>
+    </form>
+</section>
+</body>
+</html>

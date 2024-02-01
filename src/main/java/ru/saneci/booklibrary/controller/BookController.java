@@ -20,20 +20,24 @@ import ru.saneci.booklibrary.service.BookService;
 import ru.saneci.booklibrary.service.PersonService;
 import ru.saneci.booklibrary.util.BindingResultLogger;
 
+import java.util.Optional;
+
 @Controller
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
 
     private final Logger log = LoggerFactory.getLogger(BookController.class);
     private final BindingResultLogger brLogger = BindingResultLogger.getLogger(BookController.class);
 
-    private static final String NEW_BOOK_VIEW = "book/new";
-    private static final String BOOK_LIST_VIEW = "book/list";
-    private static final String BOOK_ITEM_VIEW = "book/item";
-    private static final String BOOK_UPDATING_VIEW = "book/update";
+    private static final String NEW_BOOK_VIEW = "books/new";
+    private static final String BOOK_LIST_VIEW = "books/list";
+    private static final String BOOK_ITEM_VIEW = "books/book";
+    private static final String BOOK_UPDATING_VIEW = "books/update";
 
-    private static final String REDIRECT_TO_BOOK_ALL = "redirect:/book/all";
-    private static final String REDIRECT_TO_BOOK_ITEM = "redirect:/book/{id}";
+    private static final String REDIRECT_TO_BOOKS = "redirect:/books";
+    private static final String REDIRECT_TO_BOOK = "redirect:/books/{id}";
+
+    private static final String ERROR_404 = "error/not-found";
 
     private final BookService bookService;
     private final PersonService personService;
@@ -59,10 +63,10 @@ public class BookController {
         bookService.save(book);
         log.debug("addNewBook: finish processing");
 
-        return REDIRECT_TO_BOOK_ALL;
+        return REDIRECT_TO_BOOKS;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public String getAllBooks(Model model) {
         log.debug("getAllBooks: start processing");
         model.addAttribute("bookList", bookService.findAll());
@@ -74,17 +78,23 @@ public class BookController {
     @GetMapping("/{id}")
     public String getBookById(@PathVariable("id") Long id, Model model, @ModelAttribute("person") Person person) {
         log.debug("getBookById: start processing");
+        Optional<Book> optionalBook = bookService.findBookWithPersonById(id);
 
-        bookService.findBookWithPersonById(id).ifPresent(book -> {
+        if (optionalBook.isPresent()) {
+            Book book = optionalBook.get();
             model.addAttribute("book", book);
 
             if (book.getPerson() == null) {
                 model.addAttribute("people", personService.findAll());
             }
-        });
-        log.debug("getBookById: finish processing");
+            log.debug("getBookById: finish processing");
 
-        return BOOK_ITEM_VIEW;
+            return BOOK_ITEM_VIEW;
+        } else {
+            log.debug("getBookById: finish processing");
+
+            return ERROR_404;
+        }
     }
 
     @PatchMapping("/{id}/assign")
@@ -93,7 +103,7 @@ public class BookController {
         bookService.updatePersonId(id, person.getId());
         log.debug("assignBookToTheReader: finish processing");
 
-        return REDIRECT_TO_BOOK_ITEM.replace("{id}", String.valueOf(id));
+        return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(id));
     }
 
     @PatchMapping("/{id}/release")
@@ -102,7 +112,7 @@ public class BookController {
         bookService.updatePersonId(id, null);
         log.debug("releaseBookFromTheReader: finish processing");
 
-        return REDIRECT_TO_BOOK_ITEM.replace("{id}", String.valueOf(id));
+        return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(id));
     }
 
     @GetMapping("/{id}/edit")
@@ -124,7 +134,7 @@ public class BookController {
         bookService.update(book);
         log.debug("updateBook: finish processing");
 
-        return REDIRECT_TO_BOOK_ALL;
+        return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(book.getId()));
     }
 
     @DeleteMapping("/{id}")
@@ -133,6 +143,6 @@ public class BookController {
         bookService.delete(id);
         log.debug("deleteBook: finish processing");
 
-        return REDIRECT_TO_BOOK_ALL;
+        return REDIRECT_TO_BOOKS;
     }
 }
