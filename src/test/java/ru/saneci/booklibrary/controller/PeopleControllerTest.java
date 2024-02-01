@@ -97,7 +97,7 @@ class PeopleControllerTest extends BaseControllerTest {
         mockMvc.perform(updateReader)
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/people"));
+                .andExpect(redirectedUrl("/people/1"));
     }
 
     @Test
