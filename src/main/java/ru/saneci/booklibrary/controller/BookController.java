@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,11 +16,13 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.saneci.booklibrary.domain.Book;
 import ru.saneci.booklibrary.domain.Person;
 import ru.saneci.booklibrary.service.BookService;
 import ru.saneci.booklibrary.service.PersonService;
 import ru.saneci.booklibrary.util.BindingResultLogger;
+import ru.saneci.booklibrary.util.TemplateUtil;
 
 import java.util.Optional;
 
@@ -67,9 +71,22 @@ public class BookController {
     }
 
     @GetMapping
-    public String getAllBooks(Model model) {
+    public String getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size, Model model) {
         log.debug("getAllBooks: start processing");
-        model.addAttribute("bookList", bookService.findAll());
+        Page<Book> bookPage = bookService.findAll(PageRequest.of(page, size));
+
+        if (bookPage.getTotalPages() > 1) {
+            // add attributes for pagination
+            model.addAttribute("previousPage", bookPage.previousOrFirstPageable().getPageNumber());
+            model.addAttribute("currentPage", bookPage.getNumber());
+            model.addAttribute("nextPage", bookPage.nextOrLastPageable().getPageNumber());
+            model.addAttribute("lastPage", bookPage.getTotalPages() - 1);
+            model.addAttribute("pageNumbers", TemplateUtil.generatePageNumbers(bookPage));
+        }
+
+        model.addAttribute("bookList", bookPage.getContent());
+        model.addAttribute("size", size);
         log.debug("getAllBooks: finish processing");
 
         return BOOK_LIST_VIEW;
