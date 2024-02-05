@@ -49,7 +49,11 @@ class BookControllerTest extends BaseControllerTest {
                 .andExpect(xpath("/html/head/title").string("Список книг - SB Library"))
                 .andExpect(xpath("//*[@id='breadcrumb']/nav/ol/li[1]/a/span").string("Главная"))
                 .andExpect(xpath("//*[@id='breadcrumb']/nav/ol/li[2]").string("Список книг"))
-                .andExpect(xpath("//*[@id='bookList']/div/a").string("Добавить новую книгу"))
+                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[1]/span").string("Строк в таблице"))
+                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[2]/a").number(5d))
+                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[3]/a").number(10d))
+                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[4]/a").number(20d))
+                .andExpect(xpath("//*[@id='buttonBlock']/a").string("Добавить новую книгу"))
                 .andExpect(xpath("//*[@id='bookList']/table").exists());
     }
 
@@ -59,6 +63,74 @@ class BookControllerTest extends BaseControllerTest {
         mockMvc.perform(get("/books"))
                 .andExpect(status().isOk())
                 .andExpect(xpath("//*[@id='bookList']/table/tbody/tr").nodeCount(3));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-twelve-books.sql")
+    void whenGetAllBooksWithoutRequestParams_thenReturnDataBasedOnDefaultSizeParameter() throws Exception {
+        mockMvc.perform(get("/books"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/tbody/tr").nodeCount(10),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='firstPage']/a").exists(),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='previousPage']/a").exists(),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber0']/a").number(1d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber1']/a").number(2d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber2']/a").doesNotExist(),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='nextPage']/a").exists(),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='lastPage']/a").exists()
+                );
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-twelve-books.sql")
+    void whenGetAllBooksWithPageParam_thenReturnCorrespondingPage() throws Exception {
+        mockMvc.perform(get("/books").queryParam("page", "1"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/tbody/tr").nodeCount(2),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber0']/a").number(1d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber1']/a").number(2d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber2']/a").doesNotExist()
+                );
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-twelve-books.sql")
+    void whenGetAllBooksWithSizeParamLessThanMaxRows_thenReturnCorrespondingPageWithPaginationButtonBlock() throws Exception {
+        mockMvc.perform(get("/books").queryParam("size", "11"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/tbody/tr").nodeCount(11),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber0']/a").number(1d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber1']/a").number(2d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber2']/a").doesNotExist()
+                );
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-twelve-books.sql")
+    void whenGetAllBooksWithSizeParamGreaterThanOrEqualsMaxRows_thenReturnCorrespondingPageWithoutPaginationButtonBlock() throws Exception {
+        mockMvc.perform(get("/books").queryParam("size", "12"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/tbody/tr").nodeCount(12),
+                        xpath("//*[@id='tableNavigation']").doesNotExist()
+                );
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-twelve-books.sql")
+    void whenGetAllBooksWithPageAndSizeParams_thenReturnCorrespondingPageAndPaginationButtonBlock() throws Exception {
+        mockMvc.perform(get("/books").queryParam("size", "5").queryParam("page", "1"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/tbody/tr").nodeCount(5),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber0']/a").number(1d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber1']/a").number(2d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber2']/a").number(3d),
+                        xpath("//*[@id='tableNavigation']/ul/li[@id='pageNumber3']/a").doesNotExist()
+                );
     }
 
     @Test
