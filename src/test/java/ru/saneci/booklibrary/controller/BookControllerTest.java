@@ -134,6 +134,34 @@ class BookControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/sql/book_controller/create-three-books.sql")
+    void whenGetAllBooksWithSortByYearParamEqualsToTrue_thenReturnRowsSortedByYearInAscendingOrder() throws Exception {
+        mockMvc.perform(get("/books").queryParam("sort_by_year", "true"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/thead/tr/th[3]/a/@href").string("/books?page=&size=10&sort_by_year=false"),
+                        xpath("//*[@id='bookList']/table/thead/tr/th[3]/a/svg/use/@href").string("#sortDesc"),
+                        xpath("//*[@id='bookList']/table/tbody/tr[1]/td[3]").number(1234d),
+                        xpath("//*[@id='bookList']/table/tbody/tr[2]/td[3]").number(1235d),
+                        xpath("//*[@id='bookList']/table/tbody/tr[3]/td[3]").number(1236d)
+                );
+    }
+
+    @Test
+    @Sql(scripts = "/sql/book_controller/create-three-books.sql")
+    void whenGetAllBooksWithSortByYearParamEqualsToFalse_thenReturnRowsSortedByYearInDescendingOrder() throws Exception {
+        mockMvc.perform(get("/books").queryParam("sort_by_year", "false"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='bookList']/table/thead/tr/th[3]/a/@href").string("/books?page=&size=10&sort_by_year=true"),
+                        xpath("//*[@id='bookList']/table/thead/tr/th[3]/a/svg/use/@href").string("#sortAsc"),
+                        xpath("//*[@id='bookList']/table/tbody/tr[1]/td[3]").number(1236d),
+                        xpath("//*[@id='bookList']/table/tbody/tr[2]/td[3]").number(1235d),
+                        xpath("//*[@id='bookList']/table/tbody/tr[3]/td[3]").number(1234d)
+                );
+    }
+
+    @Test
     void whenGetBookById_thenBookItemViewShouldContainRightLayout() throws Exception {
         mockMvc.perform(get("/books/{id}", 1))
                 .andExpect(status().isOk())

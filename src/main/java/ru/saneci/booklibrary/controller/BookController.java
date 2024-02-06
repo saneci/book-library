@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,9 +71,10 @@ public class BookController {
 
     @GetMapping
     public String getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
-                              @RequestParam(value = "size", defaultValue = "10") int size, Model model) {
+                              @RequestParam(value = "size", defaultValue = "10") int size,
+                              @RequestParam(value = "sort_by_year", defaultValue = "false") boolean sortByYear, Model model) {
         log.debug("getAllBooks: start processing");
-        Page<Book> bookPage = bookService.findAll(PageRequest.of(page, size));
+        Page<Book> bookPage = bookService.findAll(page, size, sortByYear);
 
         if (bookPage.getTotalPages() > 1) {
             // add attributes for pagination
@@ -87,6 +87,7 @@ public class BookController {
 
         model.addAttribute("bookList", bookPage.getContent());
         model.addAttribute("size", size);
+        model.addAttribute("sortByYear", sortByYear);
         log.debug("getAllBooks: finish processing");
 
         return BOOK_LIST_VIEW;

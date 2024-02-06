@@ -5,27 +5,27 @@
     <title>Pagination</title>
 </head>
 <body>
-<div id="itemsPerPageSelection" th:fragment="itemsPerPage(path, currentPage, size)">
+<div id="itemsPerPageSelection" th:fragment="itemsPerPage(path)">
     <ul class="pagination mb-0">
         <li class="page-item">
             <span class="page-link link-secondary disabled bg-white">Строк в таблице</span>
         </li>
         <li class="page-item">
             <a class="page-link link-secondary" th:classappend="${size == 5} ? disabled"
-               th:href="@{{url}(url=${path}, page=${currentPage}, size=5)}">5</a>
+               th:href="@{{url}(url=${path}, page=${currentPage}, size=5, sort_by_year=${sortByYear})}">5</a>
         </li>
         <li class="page-item">
             <a class="page-link link-secondary" th:classappend="${size == 10} ? disabled"
-               th:href="@{{url}(url=${path}, page=${currentPage}, size=10)}">10</a>
+               th:href="@{{url}(url=${path}, page=${currentPage}, size=10, sort_by_year=${sortByYear})}">10</a>
         </li>
         <li class="page-item">
             <a class="page-link link-secondary" th:classappend="${size == 20} ? disabled"
-               th:href="@{{url}(url=${path}, page=${currentPage}, size=20)}">20</a>
+               th:href="@{{url}(url=${path}, page=${currentPage}, size=20, sort_by_year=${sortByYear})}">20</a>
         </li>
     </ul>
 </div>
 <nav id="tableNavigation"
-     th:fragment="tableNavigation(path, previousPage, currentPage, nextPage, lastPage, pageNumbers, size)">
+     th:fragment="tableNavigation(path)">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol th:replace="~{fragments/svg :: #arrowLeftShort}"></symbol>
         <symbol th:replace="~{fragments/svg :: #arrowRightShort}"></symbol>
@@ -33,7 +33,7 @@
     <ul class="pagination justify-content-center">
         <li id="firstPage" class="page-item">
             <a class="page-link link-secondary" th:classappend="${currentPage == 0} ? 'disabled bg-white'"
-               th:href="@{{url}(url=${path}, page=0, size=${size})}">
+               th:href="@{{url}(url=${path}, page=0, size=${size}, sort_by_year=${sortByYear})}">
                 <svg class="bi" width="16" height="16">
                     <use xlink:href="#arrowLeftShort"></use>
                 </svg>
@@ -41,23 +41,24 @@
         </li>
         <li id="previousPage" class="page-item">
             <a class="page-link link-secondary" th:classappend="${currentPage == previousPage} ? 'disabled bg-white'"
-               th:href="@{{url}(url=${path}, page=${previousPage}, size=${size})}">
+               th:href="@{{url}(url=${path}, page=${previousPage}, size=${size}, sort_by_year=${sortByYear})}">
                 <span aria-hidden="true">&#171;</span>
             </a>
         </li>
         <li class="page-item" th:attr="id='pageNumber' + ${number}" th:each="number : ${pageNumbers}">
             <a class="page-link link-secondary" th:classappend="${currentPage == number} ? disabled"
-               th:href="@{{url}(url=${path}, page=${number}, size=${size})}" th:text="${number} + 1">1</a>
+               th:href="@{{url}(url=${path}, page=${number}, size=${size}, sort_by_year=${sortByYear})}"
+               th:text="${number} + 1">1</a>
         </li>
         <li id="nextPage" class="page-item">
             <a class="page-link link-secondary" th:classappend="${currentPage == nextPage} ? 'disabled bg-white'"
-               th:href="@{{url}(url=${path}, page=${nextPage}, size=${size})}">
+               th:href="@{{url}(url=${path}, page=${nextPage}, size=${size}, sort_by_year=${sortByYear})}">
                 <span aria-hidden="true">&#187;</span>
             </a>
         </li>
         <li id="lastPage" class="page-item">
             <a class="page-link link-secondary" th:classappend="${currentPage == lastPage} ? 'disabled bg-white'"
-               th:href="@{{url}(url=${path}, page=${lastPage}, size=${size})}">
+               th:href="@{{url}(url=${path}, page=${lastPage}, size=${size}, sort_by_year=${sortByYear})}">
                 <svg class="bi" width="16" height="16">
                     <use xlink:href="#arrowRightShort"></use>
                 </svg>

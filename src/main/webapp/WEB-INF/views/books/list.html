@@ -10,16 +10,34 @@
     </ol>
 </section>
 <section id="buttonBlock" class="mb-3 gap-2 d-lg-flex justify-content-md-between">
-    <div th:replace="~{fragments/pagination :: itemsPerPage(@{/books}, ${currentPage}, ${size})}"></div>
+    <div th:replace="~{fragments/pagination :: itemsPerPage(@{/books})}"></div>
     <a class="btn btn-outline-success" role="button" href="/books/new">Добавить новую книгу</a>
 </section>
 <section id="bookList" class="table-responsive">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol th:replace="~{fragments/svg :: #sortAsc}"></symbol>
+        <symbol th:replace="~{fragments/svg :: #sortDesc}"></symbol>
+    </svg>
     <table class="table table-striped table-hover table-bordered">
         <thead class="text-center">
         <tr>
             <th scope="col">Название</th>
             <th scope="col">Автор</th>
-            <th scope="col">Год публикации</th>
+            <th scope="col" class="d-flex gap-2 justify-content-center">
+                <a class="icon-link link-dark icon-link-hover icon-link-hover-down" th:if="${sortByYear}"
+                   th:href="@{/books(page=${currentPage}, size=${size}, sort_by_year=false)}">
+                    <svg class="bi" width="16" height="16">
+                        <use xlink:href="#sortDesc"></use>
+                    </svg>
+                </a>
+                <a class="icon-link link-dark icon-link-hover icon-link-hover-down" th:if="${!sortByYear}"
+                   th:href="@{/books(page=${currentPage}, size=${size}, sort_by_year=true)}">
+                    <svg class="bi" width="16" height="16">
+                        <use xlink:href="#sortAsc"></use>
+                    </svg>
+                </a>
+                <span>Год публикации</span>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -32,8 +50,7 @@
         </tbody>
     </table>
     <div th:if="${lastPage > 0}">
-        <nav th:replace="~{fragments/pagination :: tableNavigation(@{/books}, ${previousPage}, ${currentPage},
-        ${nextPage}, ${lastPage}, ${pageNumbers}, ${size})}"></nav>
+        <nav th:replace="~{fragments/pagination :: tableNavigation(@{/books})}"></nav>
     </div>
 </section>
 </body>
