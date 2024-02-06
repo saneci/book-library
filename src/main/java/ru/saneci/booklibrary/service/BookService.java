@@ -2,7 +2,9 @@ package ru.saneci.booklibrary.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.saneci.booklibrary.domain.Book;
@@ -25,8 +27,10 @@ public class BookService {
         this.personRepository = personRepository;
     }
 
-    public Page<Book> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+    public Page<Book> findAll(int page, int size, boolean sortByYear) {
+        return sortByYear
+                ? bookRepository.findAll(PageRequest.of(page, size, Sort.by(Direction.ASC, "publishYear")))
+                : bookRepository.findAll(PageRequest.of(page, size, Sort.by(Direction.DESC, "publishYear")));
     }
 
     public Optional<Book> findById(Long id) {

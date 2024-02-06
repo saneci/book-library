@@ -17,3 +17,7 @@
     width: 1rem;
     height: 1rem;
 }
+
+.icon-link-hover-down {
+    --bs-icon-link-transform: translate3d(0, .125rem, 0);
+}
