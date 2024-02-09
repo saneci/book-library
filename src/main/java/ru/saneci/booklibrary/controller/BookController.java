@@ -69,10 +69,11 @@ public class BookController {
         return REDIRECT_TO_BOOKS;
     }
 
-    @GetMapping
+    @GetMapping({"", "/search"})
     public String getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size,
-                              @RequestParam(value = "sort_by_year", defaultValue = "false") boolean sortByYear, Model model) {
+                              @RequestParam(value = "sort_by_year", defaultValue = "false") boolean sortByYear,
+                              @RequestParam(value = "title", defaultValue = "") String title, Model model) {
         log.debug("getAllBooks: start processing");
         Page<Book> bookPage = bookService.findAll(page, size, sortByYear);
 
@@ -85,7 +86,13 @@ public class BookController {
             model.addAttribute("pageNumbers", TemplateUtil.generatePageNumbers(bookPage));
         }
 
-        model.addAttribute("bookList", bookPage.getContent());
+        if (title.isEmpty()) {
+            model.addAttribute("bookList", bookPage.getContent());
+        } else {
+            model.addAttribute("bookList", bookService.findAll(title));
+            model.addAttribute("bookTitle", title);
+        }
+
         model.addAttribute("size", size);
         model.addAttribute("sortByYear", sortByYear);
         log.debug("getAllBooks: finish processing");

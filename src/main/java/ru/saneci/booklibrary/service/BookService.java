@@ -12,6 +12,7 @@ import ru.saneci.booklibrary.domain.Person;
 import ru.saneci.booklibrary.repository.BookRepository;
 import ru.saneci.booklibrary.repository.PersonRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,10 @@ public class BookService {
     public BookService(BookRepository bookRepository, PersonRepository personRepository) {
         this.bookRepository = bookRepository;
         this.personRepository = personRepository;
+    }
+
+    public List<Book> findAll(String title) {
+        return bookRepository.findAllByTitleContainsIgnoreCase(title);
     }
 
     public Page<Book> findAll(int page, int size, boolean sortByYear) {
