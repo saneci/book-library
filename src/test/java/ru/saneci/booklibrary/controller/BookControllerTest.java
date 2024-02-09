@@ -58,7 +58,7 @@ class BookControllerTest extends BaseControllerTest {
                         xpath("//*[@id='buttonBlock']/div[1]/div/ul/li[4]/a").number(20d),
                         xpath("//*[@id='buttonBlock']/div[2]/div[1]/form/div[1]/input").exists(),
                         xpath("//*[@id='buttonBlock']/div[2]/div[1]/form/div[2]/button/svg/use/@href").string("#search"),
-                        xpath("//*[@id='buttonBlock']/div[2]/div[2]/a").string("Добавить новую книгу"),
+                        xpath("//*[@id='buttonBlock']/div[2]/div[2]/a/svg/use/@href").string("#plus"),
                         xpath("//*[@id='bookList']/table").exists()
                 );
     }
