@@ -12,6 +12,7 @@
 <section id="buttonBlock" class="mb-3 gap-2 d-lg-flex justify-content-md-between">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol th:replace="~{fragments/svg :: #search}"></symbol>
+        <symbol th:replace="~{fragments/svg :: #plus}"></symbol>
     </svg>
     <div class="row justify-content-lg-start">
         <div th:replace="~{fragments/pagination :: itemsPerPage(@{/books})}"></div>
@@ -34,7 +35,12 @@
             </form>
         </div>
         <div class="col-auto ps-1">
-            <a class="btn btn-outline-success" role="button" href="/books/new">Добавить новую книгу</a>
+            <a class="btn btn-outline-success" role="button" href="/books/new" data-bs-toggle="tooltip"
+               data-bs-title="Нажмите для добавления новой книги">
+                <svg class="bi" width="16" height="16">
+                    <use xlink:href="#plus"></use>
+                </svg>
+            </a>
         </div>
     </div>
 </section>
