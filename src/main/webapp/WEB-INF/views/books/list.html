@@ -10,8 +10,39 @@
     </ol>
 </section>
 <section id="buttonBlock" class="mb-3 gap-2 d-lg-flex justify-content-md-between">
-    <div th:replace="~{fragments/pagination :: itemsPerPage(@{/books})}"></div>
-    <a class="btn btn-outline-success" role="button" href="/books/new">Добавить новую книгу</a>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol th:replace="~{fragments/svg :: #search}"></symbol>
+        <symbol th:replace="~{fragments/svg :: #plus}"></symbol>
+    </svg>
+    <div class="row justify-content-lg-start">
+        <div th:replace="~{fragments/pagination :: itemsPerPage(@{/books})}"></div>
+    </div>
+    <div class="row justify-content-lg-end">
+        <div class="col-auto pe-1">
+            <form class="row g-2" th:method="GET" th:action="@{/books/search(title=${bookTitle})}">
+                <div class="col-auto">
+                    <label for="bookSearch" class="visually-hidden">Book name</label>
+                    <input id="bookSearch" class="form-control" type="search" placeholder="Название книги" name="title"
+                           th:value="${bookTitle}"/>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-outline-secondary form-control" type="submit">
+                        <svg class="bi" width="16" height="16">
+                            <use xlink:href="#search"></use>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-auto ps-1">
+            <a class="btn btn-outline-success" role="button" href="/books/new" data-bs-toggle="tooltip"
+               data-bs-title="Нажмите для добавления новой книги">
+                <svg class="bi" width="16" height="16">
+                    <use xlink:href="#plus"></use>
+                </svg>
+            </a>
+        </div>
+    </div>
 </section>
 <section id="bookList" class="table-responsive">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">

@@ -41,20 +41,26 @@ class BookControllerTest extends BaseControllerTest {
                 .andExpect(redirectedUrl("/books"));
     }
 
+    // -------------------------------------------------- getAllBooks --------------------------------------------------
+
     @Test
     void whenGetAllBooks_thenBookListViewShouldContainRightLayout() throws Exception {
         mockMvc.perform(get("/books"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("books/list"))
-                .andExpect(xpath("/html/head/title").string("Список книг - SB Library"))
-                .andExpect(xpath("//*[@id='breadcrumb']/nav/ol/li[1]/a/span").string("Главная"))
-                .andExpect(xpath("//*[@id='breadcrumb']/nav/ol/li[2]").string("Список книг"))
-                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[1]/span").string("Строк в таблице"))
-                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[2]/a").number(5d))
-                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[3]/a").number(10d))
-                .andExpect(xpath("//*[@id='buttonBlock']/div/ul/li[4]/a").number(20d))
-                .andExpect(xpath("//*[@id='buttonBlock']/a").string("Добавить новую книгу"))
-                .andExpect(xpath("//*[@id='bookList']/table").exists());
+                .andExpectAll(
+                        view().name("books/list"),
+                        xpath("/html/head/title").string("Список книг - SB Library"),
+                        xpath("//*[@id='breadcrumb']/nav/ol/li[1]/a/span").string("Главная"),
+                        xpath("//*[@id='breadcrumb']/nav/ol/li[2]").string("Список книг"),
+                        xpath("//*[@id='buttonBlock']/div[1]/div/ul/li[1]/span").string("Строк в таблице"),
+                        xpath("//*[@id='buttonBlock']/div[1]/div/ul/li[2]/a").number(5d),
+                        xpath("//*[@id='buttonBlock']/div[1]/div/ul/li[3]/a").number(10d),
+                        xpath("//*[@id='buttonBlock']/div[1]/div/ul/li[4]/a").number(20d),
+                        xpath("//*[@id='buttonBlock']/div[2]/div[1]/form/div[1]/input").exists(),
+                        xpath("//*[@id='buttonBlock']/div[2]/div[1]/form/div[2]/button/svg/use/@href").string("#search"),
+                        xpath("//*[@id='buttonBlock']/div[2]/div[2]/a/svg/use/@href").string("#plus"),
+                        xpath("//*[@id='bookList']/table").exists()
+                );
     }
 
     @Test
@@ -162,6 +168,23 @@ class BookControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/sql/book_controller/create-twelve-books.sql")
+    void whenGetAllBooksWithTitleParam_thenBookListViewShouldContainMatchingEntities() throws Exception {
+        mockMvc.perform(get("/books/search").queryParam("title", "1"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        xpath("//*[@id='buttonBlock']/div[2]/div[1]/form/@action").string("/books/search?title=1"),
+                        xpath("//*[@id='buttonBlock']/div[2]/div[1]/form/div[1]/input/@value").string("1"),
+                        xpath("//*[@id='bookList']/table/tbody/tr[1]/td[1]").string("Test Book 1"),
+                        xpath("//*[@id='bookList']/table/tbody/tr[2]/td[1]").string("Test Book 10"),
+                        xpath("//*[@id='bookList']/table/tbody/tr[3]/td[1]").string("Test Book 11"),
+                        xpath("//*[@id='bookList']/table/tbody/tr[4]/td[1]").string("Test Book 12")
+                );
+    }
+
+    // -------------------------------------------------- getBookById --------------------------------------------------
+
+    @Test
     void whenGetBookById_thenBookItemViewShouldContainRightLayout() throws Exception {
         mockMvc.perform(get("/books/{id}", 1))
                 .andExpect(status().isOk())
@@ -173,6 +196,8 @@ class BookControllerTest extends BaseControllerTest {
                 .andExpect(xpath("//*[@id='bookInfo']/div[@class='card col-lg-9']/div").nodeCount(2))
                 .andExpect(xpath("//*[@id='bookInfo']/div[@id='deleteConfirmationModal']").exists());
     }
+
+    // --------------------------------------------- assignBookToTheReader ---------------------------------------------
 
     @Test
     @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
@@ -194,6 +219,8 @@ class BookControllerTest extends BaseControllerTest {
                         .string("Test Book, Test Author, 1234"));
     }
 
+    // ------------------------------------------- releaseBookFromTheReader --------------------------------------------
+
     @Test
     @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
     void whenReleaseBookFromTheReader_thenRedirectToGetBookByIdEndpoint() throws Exception {
@@ -214,6 +241,8 @@ class BookControllerTest extends BaseControllerTest {
                         .string("Человек пока не взял не одной книги"));
     }
 
+    // ---------------------------------------------- getBookUpdatingView ----------------------------------------------
+
     @Test
     void whenGetBookUpdatingView_thenUpdateViewShouldContainRightLayout() throws Exception {
         mockMvc.perform(get("/books/{id}/edit", 1))
@@ -227,6 +256,8 @@ class BookControllerTest extends BaseControllerTest {
                 .andExpect(xpath("//*[@id='mainContent']/div/form/input[@name='_method'][@value='PATCH']").exists())
                 .andExpect(xpath("//*[@id='mainContent']/div/form/div").nodeCount(3));
     }
+
+    // --------------------------------------------------- updateBook --------------------------------------------------
 
     @Test
     @Sql(scripts = "/sql/book_controller/create-book-with-linked-person.sql")
@@ -257,6 +288,8 @@ class BookControllerTest extends BaseControllerTest {
                 .andExpect(xpath("//*[@id='personInfo']/div/div/div/ol/li/a")
                         .string("Test Book Updated, Test Author Updated, 2000"));
     }
+
+    // --------------------------------------------------- deleteBook --------------------------------------------------
 
     @Test
     void whenDeleteBook_thenRedirectToBookAllEndpoint() throws Exception {

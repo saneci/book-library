@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.saneci.booklibrary.domain.Book;
 import ru.saneci.booklibrary.domain.Person;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,4 +19,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Modifying
     @Query("update Book b set b.person = ?1 where b.id = ?2")
     int updatePersonId(Person person, Long bookId);
+
+    List<Book> findAllByTitleContainsIgnoreCase(String title);
 }
