@@ -4,9 +4,9 @@
 
     <groupId>ru.saneci.booklibrary</groupId>
     <artifactId>book-library</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
-    <name>Book Library</name>
+    <name>SB Library</name>
     <url>http://localhost:8080</url>
 
     <properties>
