@@ -4,3 +4,5 @@ spring.datasource.username=
 spring.datasource.password=
 spring.datasource.format_sql=false
 spring.datasource.highlight_sql=true
+
+spring.application.days_until_book_overdue=10

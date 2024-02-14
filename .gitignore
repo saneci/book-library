@@ -4,7 +4,7 @@
 
 # Project
 target
-*.properties
+src/main/resources/*.properties
 
 # Compiled class file
 *.class
