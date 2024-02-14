@@ -24,7 +24,7 @@ public class Book {
     @Column(name = "id")
     private Long id;
 
-    @Pattern(regexp = "([А-Я]|[A-Z]).{1,100}",
+    @Pattern(regexp = "([А-ЯA-Z]).{1,100}",
             message = "Название книги должно начинаться с заглавной буквы и содержать от 2 до 100 символов")
     @Column(name = "title")
     private String title;
