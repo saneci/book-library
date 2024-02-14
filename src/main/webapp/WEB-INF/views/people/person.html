@@ -22,7 +22,8 @@
             <div th:if="${!person.getBookList().isEmpty()}">
                 <h6 class="card-text">Книги:</h6>
                 <ol class="list-group list-group-numbered">
-                    <li class="list-group-item list-group-item-action" th:each="book : ${person.getBookList()}">
+                    <li class="list-group-item list-group-item-action" th:each="book : ${person.getBookList()}"
+                        th:classappend="${book.isOverdue()} ? 'bg-danger-subtle'">
                         <a class="stretched-link link-dark text-decoration-none"
                            th:href="@{/books/{id}(id=${book.getId()})}"
                            th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getPublishYear()}">Book</a>
@@ -42,6 +43,15 @@
         </div>
     </div>
     <div th:replace="fragments/modal :: deleteConfirmationModal(${person.getName()}, @{/people/{id}(id=${person.getId()})})"></div>
+</section>
+<section id="customJavaScript">
+    <script>
+        document.querySelectorAll(".bg-danger-subtle")
+            .forEach(element => {
+                element.setAttribute("data-bs-toggle", "tooltip");
+                element.setAttribute("data-bs-title", 'Книга просрочена');
+            })
+    </script>
 </section>
 </body>
 </html>

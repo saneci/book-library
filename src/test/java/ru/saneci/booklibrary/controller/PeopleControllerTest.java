@@ -26,6 +26,8 @@ class PeopleControllerTest extends BaseControllerTest {
                 .andExpect(xpath("//*[@id='peopleList']/table").exists());
     }
 
+    // ------------------------------------------------ getReaderById --------------------------------------------------
+
     @Test
     void whenGetReaderById_thenPersonViewShouldContainRightLayout() throws Exception {
         mockMvc.perform(get("/people/{id}", 1))
@@ -46,6 +48,24 @@ class PeopleControllerTest extends BaseControllerTest {
                 .andExpect(xpath("//*[@id='personInfo']/div/div/h5").string("Test User, 1990г.р."))
                 .andExpect(xpath("//*[@id='personInfo']/div/div/div/p").string("Человек пока не взял не одной книги"));
     }
+
+    @Test
+    @Sql(scripts = "/sql/people_controller/create-overdue-book.sql")
+    void whenGetReaderByIdReturnOverdueBook_thenThisBookShouldBeHighlightedInRed() throws Exception {
+        mockMvc.perform(get("/people/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(xpath("//*[@id='personInfo']/div/div/div/ol/li[contains(@class, 'bg-danger-subtle')]").exists());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/people_controller/create-not-overdue-book.sql")
+    void whenGetReaderByIdReturnNotOverdueBook_thenThisBookShouldNotBeHighlightedInRed() throws Exception {
+        mockMvc.perform(get("/people/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(xpath("//*[@id='personInfo']/div/div/div/ol/li[contains(@class, 'bg-danger-subtle')]").doesNotExist());
+    }
+
+// -----------------------------------------------getNewPeopleView -------------------------------------------------
 
     @Test
     void whenGetNewPeopleView_thenNewViewShouldContainRightLayout() throws Exception {

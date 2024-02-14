@@ -9,8 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book")
@@ -21,7 +24,7 @@ public class Book {
     @Column(name = "id")
     private Long id;
 
-    @Pattern(regexp = "([А-Я]|[A-Z]).{1,100}",
+    @Pattern(regexp = "([А-ЯA-Z]).{1,100}",
             message = "Название книги должно начинаться с заглавной буквы и содержать от 2 до 100 символов")
     @Column(name = "title")
     private String title;
@@ -34,6 +37,12 @@ public class Book {
     @Positive(message = "Год публикации должен быть больше 0")
     @Column(name = "publish_year")
     private int publishYear;
+
+    @Column(name = "given_at")
+    private LocalDateTime givenAt;
+
+    @Transient
+    private boolean isOverdue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
@@ -78,6 +87,22 @@ public class Book {
 
     public void setPublishYear(int publishYear) {
         this.publishYear = publishYear;
+    }
+
+    public LocalDateTime getGivenAt() {
+        return givenAt;
+    }
+
+    public void setGivenAt(LocalDateTime givenAt) {
+        this.givenAt = givenAt;
+    }
+
+    public boolean isOverdue() {
+        return isOverdue;
+    }
+
+    public void setOverdue(boolean overdue) {
+        isOverdue = overdue;
     }
 
     public Person getPerson() {

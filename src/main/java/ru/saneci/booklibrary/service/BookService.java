@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.saneci.booklibrary.domain.Book;
 import ru.saneci.booklibrary.domain.Person;
 import ru.saneci.booklibrary.repository.BookRepository;
-import ru.saneci.booklibrary.repository.PersonRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +20,10 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final PersonRepository personRepository;
 
     @Autowired
-    public BookService(BookRepository bookRepository, PersonRepository personRepository) {
+    public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.personRepository = personRepository;
     }
 
     public List<Book> findAll(String title) {
@@ -53,21 +51,22 @@ public class BookService {
 
     @Transactional
     public void update(Book book) {
-        if (book.getPerson() == null) {
-            bookRepository.findBookWithPersonById(book.getId()).ifPresent(b -> book.setPerson(b.getPerson()));
-        }
-        bookRepository.save(book);
+        bookRepository.findById(book.getId()).ifPresent(b -> {
+            b.setTitle(book.getTitle());
+            b.setAuthor(book.getAuthor());
+            b.setPublishYear(book.getPublishYear());
+        });
     }
 
     @Transactional
-    public void updatePersonId(Long bookId, Long personId) {
-        Person person = null;
-
-        if (personId != null) {
-            person = personRepository.getReferenceById(personId);
-        }
-
-        bookRepository.updatePersonId(person, bookId);
+    public void updatePersonId(Long bookId, Person person) {
+        bookRepository.findById(bookId).ifPresent(b -> {
+            b.setPerson(person);
+            if (person != null)
+                b.setGivenAt(LocalDateTime.now());
+            else
+                b.setGivenAt(null);
+        });
     }
 
     @Transactional

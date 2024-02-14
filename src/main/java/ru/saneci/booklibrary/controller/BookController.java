@@ -125,7 +125,7 @@ public class BookController {
     @PatchMapping("/{id}/assign")
     public String assignBookToTheReader(@PathVariable("id") Long id, @ModelAttribute("person") Person person) {
         log.debug("assignBookToTheReader: start processing");
-        bookService.updatePersonId(id, person.getId());
+        bookService.updatePersonId(id, person);
         log.debug("assignBookToTheReader: finish processing");
 
         return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(id));
