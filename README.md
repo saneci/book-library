@@ -1,23 +1,21 @@
-## Book Library
+## Books registry
 
-Цифровой учёт книг в библиотеке [^note]
+Digital accounting of books in the library
 
-[^note]: Учебный проект из курса на Swiftbook.org (Spring - Полный курс. Boot, Hibernate, Security, REST)
+### Table of content
 
-### Содержание
+1. [Business problem](#business-problem)
+2. [Technologies used in the project](#technologies-used-in-the-project)
+3. [Connecting to the database](#connecting-to-the-database)
+4. [Running application](#running-application)
 
-1. [Бизнес задача](#бизнес-задача)
-2. [Технологии, используемые в проекте](#технологии-и-инструменты-используемые-в-проекте)
-3. [Подключение к базе данных](#подключение-к-базе-данных)
-4. [Запуск приложения](#запуск-приложения)
+#### Business problem
 
-#### Бизнес задача
+The library needs to move to registering books in digital format. Librarians must be able to register readers, 
+check out books, and release books (after the reader returns the book back to the library). 
+It is necessary to implement a web application for this purpose.
 
-В местной библиотеке хотят перейти на цифровой учет книг. Необходимо реализовать веб-приложение для них.
-Библиотекари должны иметь возможность регистрировать читателей, выдавать им книги и освобождать книги
-(после того, как читатель возвращает книгу обратно в библиотеку).
-
-#### Технологии и инструменты, используемые в проекте
+#### Technologies used in the project
 
 - Java 17
 - Spring Framework 6.0
@@ -25,20 +23,18 @@
 - Thymeleaf 3.1
 - Apache Tomcat 10
 
-#### Подключение к базе данных
+#### Connecting to the database
 
-1. Установить СУБД [PostgreSQL](https://www.postgresql.org/download/)
-2. С помощью PG Admin создать новую БД, после чего подключиться к ней
-3. Выполнить DDL скрипты, расположенные в файле `src/main/resources/db/migration/r-2023-1/deploy.sql`
-4. Скопировать конфигурационный файл `src/main/resources/application.properties.origin` в `src/main/resources`,
-   переименовав его в `application.properties`
-5. Указать в конфигурационном файле данные для подключения к БД
+1. Install the DBMS [PostgreSQL](https://www.postgresql.org/download/)
+2. Using PG Admin, create a new database and then connect to the DBMS
+3. Execute DDL scripts located in the folder `src/main/resources/db/migration`
+4. Copy configuration file `src/main/resources/application.properties.origin` into `src/main/resources`,
+   and rename it to `application.properties`
+5. Specify data for connecting to the Database in the created configuration file
 
-#### Запуск приложения
+#### Running application
 
-1. Установить [Tomcat](https://tomcat.apache.org/download-10.cgi) 
-2. Настроить IDE для работы с Tomcat ([инструкция](https://www.jetbrains.com/idea/guide/tutorials/working-with-apache-tomcat/using-existing-application/))
-3. Запустить Tomcat
-4. Перейти на главную страницу приложения по адресу [localhost:8080](http://localhost:8080)
-
-![alt text](https://github.com/saneci/book-library/blob/master/src/main/resources/img/main_page.jpg?raw=true)
+1. Install [Tomcat](https://tomcat.apache.org/download-10.cgi) 
+2. Configure the IDE to work with Tomcat ([instructions](https://www.jetbrains.com/idea/guide/tutorials/working-with-apache-tomcat/using-existing-application/))
+3. Start Tomcat
+4. The application will be launched at [localhost:8080](http://localhost:8080)
