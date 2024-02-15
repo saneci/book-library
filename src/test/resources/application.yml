@@ -1,0 +1,32 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+        highlight_sql: true
+  mvc:
+    hiddenmethod.filter.enabled: true
+  application:
+    days_until_book_overdue: 10
+
+logging:
+  pattern:
+    console: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSSXXX}} %clr(${LOG_LEVEL_PATTERN:%5level}) %clr(%-45.55logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+  level:
+    org:
+      springframework:
+        web: WARN
+        test: OFF
+        mock: OFF
+      testcontainers: INFO
+      thymeleaf: WARN
+      hibernate:
+        SQL: DEBUG
+        orm:
+          results: INFO
+        validator: WARN
+    com:
+      github:
+        dockerjava: WARN
+        dockerjava.zerodep: OFF
+    ru.saneci.booklibrary: DEBUG
