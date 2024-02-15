@@ -18,23 +18,29 @@ It is necessary to implement a web application for this purpose.
 #### Technologies used in the project
 
 - Java 17
-- Spring Framework 6.0
+- Spring Boot 3.2.2
+- Spring Web MVC
+- Spring Data JPA
+- Hibernate
 - PostgreSQL 16
-- Thymeleaf 3.1
-- Apache Tomcat 10
+- Thymeleaf
+- Apache Tomcat
 
 #### Connecting to the database
 
 1. Install the DBMS [PostgreSQL](https://www.postgresql.org/download/)
 2. Using PG Admin, create a new database and then connect to the DBMS
 3. Execute DDL scripts located in the folder `src/main/resources/db/migration`
-4. Copy configuration file `src/main/resources/application.properties.origin` into `src/main/resources`,
-   and rename it to `application.properties`
-5. Specify data for connecting to the Database in the created configuration file
 
 #### Running application
 
-1. Install [Tomcat](https://tomcat.apache.org/download-10.cgi) 
-2. Configure the IDE to work with Tomcat ([instructions](https://www.jetbrains.com/idea/guide/tutorials/working-with-apache-tomcat/using-existing-application/))
-3. Start Tomcat
-4. The application will be launched at [localhost:8080](http://localhost:8080)
+1. Upload jar file from [latest release](https://github.com/saneci/book-library/releases/latest)
+2. Run the application using below command (don't forget substitute right values instead of variables)
+    ```shell
+    java -Dspring.datasource.url=jdbc:postgresql://[database_host]:[database_port]/[database_name] \ 
+	     -Dspring.datasource.username=[database_username] \
+	     -Dspring.datasource.password=[database_password] \
+	     -Dspring.application.days_until_book_overdue=[int_value] \
+	     -jar target/[jar_file_name]
+    ```
+   The application will be launched at [localhost:8080](http://localhost:8080)
