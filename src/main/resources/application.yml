@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+        highlight_sql: true
+  mvc:
+    hiddenmethod.filter.enabled: true
+  application:
+    days_until_book_overdue: ${DAYS_UNTIL_BOOK_OVERDUE}
+
+logging:
+  pattern:
+    console: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSSXXX}} %clr(${LOG_LEVEL_PATTERN:%5level}) %clr(%-45.55logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+  level:
+    org:
+      springframework:
+        web: INFO
+      thymeleaf: INFO
+      hibernate:
+        SQL: OFF
+        orm:
+          results: INFO
+        validator: WARN
+    ru.saneci.booklibrary: WARN
