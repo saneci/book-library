@@ -31,7 +31,10 @@ public class PersonService {
     }
 
     public List<Person> findAll() {
-        return personRepository.findAll();
+        // TODO: remove filter after https://github.com/users/saneci/projects/3/views/1?pane=issue&itemId=56174894
+        return personRepository.findAll().stream()
+                .filter(person -> person.getRole().equals(Role.ROLE_READER))
+                .toList();
     }
 
     public Optional<Person> findById(Long id) {
@@ -60,7 +63,6 @@ public class PersonService {
 
     @Transactional
     public void save(Person person) {
-        person.setRole(Role.ROLE_USER);
         encodePassword(person);
         personRepository.save(person);
     }

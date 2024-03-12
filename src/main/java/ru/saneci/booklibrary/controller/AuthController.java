@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.saneci.booklibrary.domain.Person;
+import ru.saneci.booklibrary.domain.Role;
 import ru.saneci.booklibrary.service.PersonService;
 import ru.saneci.booklibrary.util.BindingResultLogger;
 import ru.saneci.booklibrary.util.PersonValidator;
@@ -48,6 +49,8 @@ public class AuthController {
             brLogger.warn("performRegistration", bindingResult);
             return "auth/registration";
         }
+        // TODO: remove setRole after https://github.com/users/saneci/projects/3/views/1?pane=issue&itemId=56174894
+        person.setRole(Role.ROLE_USER);
         personService.save(person);
         log.debug("performRegistration: finish processing");
 

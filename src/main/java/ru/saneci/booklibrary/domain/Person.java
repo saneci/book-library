@@ -38,7 +38,8 @@ public class Person {
     private int birthdayYear;
 
     @Column(name = "username")
-    @NotBlank(message = "Логин не должен быть пустым")
+    // TODO: uncomment after https://github.com/users/saneci/projects/3/views/1?pane=issue&itemId=56174894
+    // @NotBlank(message = "Логин не должен быть пустым")
     @Pattern(regexp = "[^а-яА-Я]*", message = "Логин не должен содержать кириллицу")
     private String username;
 
