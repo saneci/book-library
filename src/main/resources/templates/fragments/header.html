@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Body header</title>
@@ -37,7 +37,13 @@
                             <li><a class="dropdown-item" href="/people/new">Добавить нового читателя</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <a class="nav-link" href="/admin/dashboard">Админка</a>
+                    </li>
                 </ul>
+                <form th:method="POST" th:action="@{/logout}">
+                    <input class="btn btn-sm btn-outline-primary" type="submit" value="Выход"/>
+                </form>
             </div>
         </div>
     </nav>

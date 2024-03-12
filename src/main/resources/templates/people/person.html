@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section})">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section}, ~{}, ~{})">
 <head>
     <title th:text="${'Карточка читателя ' + person.getName()} + ' - SB Library'"></title>
 </head>
@@ -35,7 +36,7 @@
             <form class="col-auto" th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
                 <input class="btn btn-outline-info" role="button" type="submit" value="Обновить"/>
             </form>
-            <div class="col-auto">
+            <div class="col-auto" sec:authorize="hasRole('ADMIN')">
                 <button class="btn btn-outline-danger" type="button" data-bs-toggle="modal"
                         data-bs-target="#deleteConfirmationModal">Удалить
                 </button>
