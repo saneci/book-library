@@ -12,7 +12,7 @@
 
     <groupId>ru.saneci</groupId>
     <artifactId>book-library</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <name>SB Library</name>
     <description>Saneci Book Library is a digital accounting of books in the library</description>
 
