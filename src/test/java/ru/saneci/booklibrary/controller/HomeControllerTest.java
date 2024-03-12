@@ -37,8 +37,8 @@ class HomeControllerTest extends BaseControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(xpath("//*[@id='mainMenu']/nav/div[1]/h4").string("Основные разделы приложения"))
                 .andExpect(xpath("//*[@id='mainMenu']/nav/div[2]/a/strong").string("Книги"))
-                .andExpect(xpath("//*[@id='mainMenu']/nav/div[3]/a/strong").string("Новая книга"))
-                .andExpect(xpath("//*[@id='mainMenu']/nav/div[4]/a/strong").string("Читатели"))
+                .andExpect(xpath("//*[@id='mainMenu']/nav/div[3]/a/strong").string("Читатели"))
+                .andExpect(xpath("//*[@id='mainMenu']/nav/div[4]/a/strong").string("Новая книга"))
                 .andExpect(xpath("//*[@id='mainMenu']/nav/div[5]/a/strong").string("Новый читатель"));
     }
 
