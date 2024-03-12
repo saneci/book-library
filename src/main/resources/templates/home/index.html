@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/main :: layout (~{::title}, ~{::section}, ~{}, ~{})">
 <head>
     <title th:text="${'Главная страница - SB Library'}"></title>
 </head>
@@ -17,16 +17,16 @@
             </a>
         </div>
         <div class="col-lg-6 mb-lg-3">
-            <a class="d-block text-decoration-none" href="/books/new">
-                <strong class="d-block h5 mb-0">Новая книга</strong>
-                <span class="text-secondary">Добавление в базу данных новой книги.</span>
-            </a>
-        </div>
-        <div class="col-lg-6 mb-lg-3">
             <a class="d-block text-decoration-none" href="/people">
                 <strong class="d-block h5 mb-0">Читатели</strong>
                 <span class="text-secondary">Отображение информации о читателях, наличии у них книг и редактирование
                     персональных данных.</span>
+            </a>
+        </div>
+        <div class="col-lg-6 mb-lg-3">
+            <a class="d-block text-decoration-none" href="/books/new">
+                <strong class="d-block h5 mb-0">Новая книга</strong>
+                <span class="text-secondary">Добавление в базу данных новой книги.</span>
             </a>
         </div>
         <div class="col-lg-6 mb-lg-3">

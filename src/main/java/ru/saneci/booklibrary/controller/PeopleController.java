@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.saneci.booklibrary.domain.Person;
+import ru.saneci.booklibrary.domain.Role;
 import ru.saneci.booklibrary.service.PersonService;
 import ru.saneci.booklibrary.util.BindingResultLogger;
 
@@ -89,6 +90,7 @@ public class PeopleController {
             brLogger.warn("createNewReader", bindingResult);
             return NEW_PEOPLE_VIEW;
         }
+        crutch(person);
         personService.save(person);
         log.debug("createNewReader: finish processing");
 
@@ -103,6 +105,7 @@ public class PeopleController {
             brLogger.warn("updateReader", bindingResult);
             return NEW_PEOPLE_VIEW;
         }
+        crutch(person);
         personService.update(person);
         log.debug("updateReader: finish processing");
 
@@ -116,5 +119,12 @@ public class PeopleController {
         log.debug("deleteReader: finish processing");
 
         return REDIRECT_TO_PEOPLE;
+    }
+
+    // TODO: remove after https://github.com/users/saneci/projects/3/views/1?pane=issue&itemId=56174894
+    private void crutch(Person person) {
+        person.setRole(Role.ROLE_READER);
+        person.setUsername("");
+        person.setPassword("");
     }
 }

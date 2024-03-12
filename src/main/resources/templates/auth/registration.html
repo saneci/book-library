@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/main-auth :: layout (~{::title}, ~{::section})">
+<head>
+    <title th:text="${'Пожалуйста, зарегистрируйтесь - SB Library'}"></title>
+</head>
+<body>
+<section id="personRegistration" class="mt-lg-5 px-lg-5">
+    <div class="row px-lg-5 justify-content-center">
+        <form class="col-lg-5 p-4 border rounded-2 bg-body-tertiary" th:method="POST" th:action="@{/auth/registration}"
+              th:object="${person}">
+            <div id="nameInput" class="row mb-3">
+                <label for="name" class="col-form-label col-sm-4">ФИО:</label>
+                <div class="col-sm-8">
+                    <input id="name" type="text" class="form-control"
+                           th:classappend="${#fields.hasErrors('name') ? 'is-invalid' : ''}" th:field="*{name}"/>
+                    <div id="nameValidationError" class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                         th:errors="*{name}">Error
+                    </div>
+                </div>
+            </div>
+            <div id="birthdayYearInput" class="row mb-3">
+                <label for="birthdayYear" class="col-form-label col-sm-4">Год рождения:</label>
+                <div class="col-sm-8">
+                    <input id="birthdayYear" type="number" class="form-control"
+                           th:classappend="${#fields.hasErrors('birthdayYear') ? 'is-invalid' : ''}"
+                           th:field="*{birthdayYear}"/>
+                    <div id="birthdayYearValidationError" class="invalid-feedback"
+                         th:if="${#fields.hasErrors('birthdayYear')}" th:errors="*{birthdayYear}">Error
+                    </div>
+                </div>
+            </div>
+            <div id="usernameInput" class="row mb-3">
+                <label for="username" class="col-form-label col-sm-4">Логин:</label>
+                <div class="col-sm-8">
+                    <input id="username" type="text" class="form-control"
+                           th:classappend="${#fields.hasErrors('username') ? 'is-invalid' : ''}"
+                           th:field="*{username}"/>
+                    <div id="usernameValidationError" class="invalid-feedback"
+                         th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Error
+                    </div>
+                </div>
+            </div>
+            <div id="passwordInput" class="row mb-3">
+                <label for="password" class="col-form-label col-sm-4">Пароль:</label>
+                <div class="col-sm-8">
+                    <input id="password" type="password" class="form-control"
+                           th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}"
+                           th:field="*{password}"/>
+                    <div id="passwordValidationError" class="invalid-feedback"
+                         th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error
+                    </div>
+                </div>
+            </div>
+            <div id="passwordInputRepeat" class="row mb-3">
+                <label for="passwordRepeat" class="col-form-label col-sm-4">Повторите пароль:</label>
+                <div class="col-sm-8">
+                    <input id="passwordRepeat" type="password" class="form-control"
+                           th:classappend="${#fields.hasErrors('passwordRepeat') ? 'is-invalid' : ''}"
+                           th:field="*{passwordRepeat}"/>
+                    <div id="passwordRepeatValidationError" class="invalid-feedback"
+                         th:if="${#fields.hasErrors('passwordRepeat')}" th:errors="*{passwordRepeat}">Error
+                    </div>
+                </div>
+            </div>
+            <input class="btn btn-outline-primary mb-3" type="submit" value="Зарегистрироваться"/>
+            <p>
+                <small class="fw-light">У вас уже есть аккаунт? <a href="/auth/login">Войти</a></small>
+            </p>
+        </form>
+    </div>
+</section>
+</body>
+</html>

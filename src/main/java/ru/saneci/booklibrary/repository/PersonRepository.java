@@ -12,4 +12,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     @Query("select p from Person p left join fetch p.bookList where p.id = ?1")
     Optional<Person> findPersonWithBooksById(Long id);
+
+    Optional<Person> findPersonByUsername(String username);
 }
