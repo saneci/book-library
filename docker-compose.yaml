@@ -1,0 +1,33 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://postgres:5432/book_library
+      - DATASOURCE_USERNAME=${DB_USERNAME}
+      - DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - DAYS_UNTIL_BOOK_OVERDUE=10
+  postgres:
+    image: postgres:16
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=book_library
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USERNAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
