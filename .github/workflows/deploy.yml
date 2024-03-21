@@ -35,9 +35,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          db_username: ${{ secrets.DB_USERNAME }}
-          db_password: ${{ secrets.DB_PASSWORD }}
           context: .
+          secret-envs:
+            db_username: ${{ secrets.DB_USERNAME }}
+            db_password: ${{ secrets.DB_PASSWORD }}
           push: true
           target: final
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
