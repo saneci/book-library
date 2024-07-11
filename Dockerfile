@@ -1,55 +1,11 @@
-# syntax=docker/dockerfile:1
+FROM openjdk:17-jdk-alpine
 
-# Create a base stage.
-FROM eclipse-temurin:17-jdk-jammy AS base
-WORKDIR /build
-COPY --chmod=0755 mvnw mvnw
-COPY .mvn/ .mvn/
+RUN addgroup -S saneci && adduser -S booklibrary -G saneci
 
-# Create a stage for resolving and downloading dependencies.
-FROM base AS deps
-WORKDIR /build
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ./mvnw dependency:go-offline -DskipTests
+USER booklibrary:saneci
 
-# Create a stage for testing.
-FROM base AS test
-WORKDIR /build
-COPY ./src src/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ./mvnw test
+ARG JAR_FILE=target/*.jar
 
-# Create a stage for building the application based on the stage with downloaded dependencies.
-FROM deps AS package
-WORKDIR /build
-COPY ./src src/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ./mvnw package -DskipTests && \
-    mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
+COPY ${JAR_FILE} app.jar
 
-# Create a stage for extracting the application into separate layers.
-FROM package AS extract
-WORKDIR /build
-RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
-
-# Create a new stage for running the application that contains the minimal runtime dependencies for the application.
-FROM eclipse-temurin:17-jre-jammy AS final
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
-COPY --from=extract build/target/extracted/dependencies/ ./
-COPY --from=extract build/target/extracted/spring-boot-loader/ ./
-COPY --from=extract build/target/extracted/snapshot-dependencies/ ./
-COPY --from=extract build/target/extracted/application/ ./
-EXPOSE 8080
-ENTRYPOINT [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
+ENTRYPOINT ["java", "-Dspring.datasource.url=${DATASOURCE_URL}", "-Dspring.datasource.username=${DATASOURCE_USERNAME}", "-Dspring.datasource.password=${DATASOURCE_PASSWORD}", "-jar", "/app.jar"]
