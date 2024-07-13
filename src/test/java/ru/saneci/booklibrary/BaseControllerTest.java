@@ -41,7 +41,10 @@ public abstract class BaseControllerTest {
                         getContainerInitDatabasePath("deploy-24-1.sql"))
                 .withCopyFileToContainer(
                         getDatabaseMigrationFile("r-2024-2/deploy-24-2.sql"),
-                        getContainerInitDatabasePath("deploy-24-2.sql"));
+                        getContainerInitDatabasePath("deploy-24-2.sql"))
+                .withCopyFileToContainer(
+                        getDatabaseMigrationFile("r-2024-3/deploy-24-3.sql"),
+                        getContainerInitDatabasePath("deploy-24-3.sql"));
     }
 
     private static MountableFile getDatabaseMigrationFile(String fileName) {
