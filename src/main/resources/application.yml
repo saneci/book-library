@@ -12,7 +12,7 @@ spring:
   mvc:
     hiddenmethod.filter.enabled: true
   application:
-    days_until_book_overdue: ${DAYS_UNTIL_BOOK_OVERDUE}
+    days_until_book_overdue: 10
 
 logging:
   pattern:
@@ -21,10 +21,10 @@ logging:
     org:
       springframework:
         web: INFO
-      thymeleaf: INFO
+      thymeleaf: OFF
       hibernate:
         SQL: OFF
         orm:
           results: INFO
         validator: WARN
-    ru.saneci.booklibrary: WARN
+    ru.saneci.booklibrary: INFO

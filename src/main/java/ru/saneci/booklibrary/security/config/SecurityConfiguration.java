@@ -1,4 +1,4 @@
-package ru.saneci.booklibrary.config;
+package ru.saneci.booklibrary.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

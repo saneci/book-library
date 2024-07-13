@@ -1,4 +1,4 @@
-package ru.saneci.booklibrary.domain;
+package ru.saneci.booklibrary.business.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,9 +12,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "book")
 public class Book {
@@ -46,70 +50,5 @@ public class Book {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person person;
-
-    public Book() {
-    }
-
-    public Book(String title, String author, int publishYear) {
-        this.title = title;
-        this.author = author;
-        this.publishYear = publishYear;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public int getPublishYear() {
-        return publishYear;
-    }
-
-    public void setPublishYear(int publishYear) {
-        this.publishYear = publishYear;
-    }
-
-    public LocalDateTime getGivenAt() {
-        return givenAt;
-    }
-
-    public void setGivenAt(LocalDateTime givenAt) {
-        this.givenAt = givenAt;
-    }
-
-    public boolean isOverdue() {
-        return isOverdue;
-    }
-
-    public void setOverdue(boolean overdue) {
-        isOverdue = overdue;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+    private BusinessPerson person;
 }

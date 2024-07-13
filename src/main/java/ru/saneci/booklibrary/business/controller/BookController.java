@@ -1,9 +1,9 @@
-package ru.saneci.booklibrary.controller;
+package ru.saneci.booklibrary.business.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,17 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.saneci.booklibrary.domain.Book;
-import ru.saneci.booklibrary.domain.Person;
-import ru.saneci.booklibrary.service.BookService;
-import ru.saneci.booklibrary.service.PersonService;
-import ru.saneci.booklibrary.util.BindingResultLogger;
-import ru.saneci.booklibrary.util.TemplateUtil;
+import ru.saneci.booklibrary.business.domain.Book;
+import ru.saneci.booklibrary.business.domain.BusinessPerson;
+import ru.saneci.booklibrary.business.service.BookService;
+import ru.saneci.booklibrary.business.service.BusinessPersonService;
+import ru.saneci.booklibrary.business.util.BindingResultLogger;
+import ru.saneci.booklibrary.business.util.TemplateUtil;
 
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class BookController {
 
     private final Logger log = LoggerFactory.getLogger(BookController.class);
@@ -43,28 +44,23 @@ public class BookController {
     private static final String ERROR_404 = "error/not-found";
 
     private final BookService bookService;
-    private final PersonService personService;
-
-    @Autowired
-    public BookController(BookService bookService, PersonService personService) {
-        this.bookService = bookService;
-        this.personService = personService;
-    }
+    private final BusinessPersonService personService;
 
     @GetMapping("/new")
     public String getNewBookView(@ModelAttribute("book") Book book) {
+        log.info("Returning new book registration page");
         return NEW_BOOK_VIEW;
     }
 
     @PostMapping
     public String addNewBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
-        log.debug("addNewBook: start processing");
+        log.info("Processing create new book with id {}", book.getId());
         if (bindingResult.hasErrors()) {
             brLogger.warn("addNewBook", bindingResult);
             return NEW_BOOK_VIEW;
         }
         bookService.save(book);
-        log.debug("addNewBook: finish processing");
+        log.info("Book with id {} created", book.getId());
 
         return REDIRECT_TO_BOOKS;
     }
@@ -74,7 +70,7 @@ public class BookController {
                               @RequestParam(value = "size", defaultValue = "10") int size,
                               @RequestParam(value = "sort_by_year", defaultValue = "false") boolean sortByYear,
                               @RequestParam(value = "title", defaultValue = "") String title, Model model) {
-        log.debug("getAllBooks: start processing");
+        log.info("Processing a search request for all books");
         Page<Book> bookPage = bookService.findAll(page, size, sortByYear);
 
         if (bookPage.getTotalPages() > 1) {
@@ -95,14 +91,14 @@ public class BookController {
 
         model.addAttribute("size", size);
         model.addAttribute("sortByYear", sortByYear);
-        log.debug("getAllBooks: finish processing");
+        log.info("Returning search request result with {} books found", bookPage.getTotalElements());
 
         return BOOK_LIST_VIEW;
     }
 
     @GetMapping("/{id}")
-    public String getBookById(@PathVariable("id") Long id, Model model, @ModelAttribute("person") Person person) {
-        log.debug("getBookById: start processing");
+    public String getBookById(@PathVariable("id") Long id, Model model, @ModelAttribute("person") BusinessPerson person) {
+        log.info("Processing a search request for a book with id {}", id);
         Optional<Book> optionalBook = bookService.findBookWithPersonById(id);
 
         if (optionalBook.isPresent()) {
@@ -112,61 +108,59 @@ public class BookController {
             if (book.getPerson() == null) {
                 model.addAttribute("people", personService.findAll());
             }
-            log.debug("getBookById: finish processing");
+            log.info("Returning book with id {}", id);
 
             return BOOK_ITEM_VIEW;
         } else {
-            log.debug("getBookById: finish processing");
+            log.info("Returning not found response");
 
             return ERROR_404;
         }
     }
 
     @PatchMapping("/{id}/assign")
-    public String assignBookToTheReader(@PathVariable("id") Long id, @ModelAttribute("person") Person person) {
-        log.debug("assignBookToTheReader: start processing");
+    public String assignBookToTheReader(@PathVariable("id") Long id, @ModelAttribute("person") BusinessPerson person) {
+        log.info("Processing assign the book with id {} to the reader with id {}", id, person.getId());
         bookService.updatePersonId(id, person);
-        log.debug("assignBookToTheReader: finish processing");
+        log.info("Book with id {} assigned to the reader with id {}", id, person.getId());
 
         return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(id));
     }
 
     @PatchMapping("/{id}/release")
     public String releaseBookFromTheReader(@PathVariable("id") Long id) {
-        log.debug("releaseBookFromTheReader: start processing");
+        log.info("Processing release a book from the reader with id {}", id);
         bookService.updatePersonId(id, null);
-        log.debug("releaseBookFromTheReader: finish processing");
+        log.info("Book released from the reader with id {} ", id);
 
         return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(id));
     }
 
     @GetMapping("/{id}/edit")
     public String getBookUpdatingView(@PathVariable("id") Long id, Model model) {
-        log.debug("getBookUpdatingView: start processing");
+        log.info("Processing a search book with id {}", id);
         bookService.findById(id).ifPresent(book -> model.addAttribute("book", book));
-        log.debug("getBookUpdatingView: finish processing");
-
         return BOOK_UPDATING_VIEW;
     }
 
     @PatchMapping("/{id}")
     public String updateBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
-        log.debug("updateBook: start processing");
+        log.info("Processing update a book with id {}", book.getId());
         if (bindingResult.hasErrors()) {
             brLogger.warn("updateBook", bindingResult);
             return BOOK_UPDATING_VIEW;
         }
         bookService.update(book);
-        log.debug("updateBook: finish processing");
+        log.info("Book with id {} updated", book.getId());
 
         return REDIRECT_TO_BOOK.replace("{id}", String.valueOf(book.getId()));
     }
 
     @DeleteMapping("/{id}")
     public String deleteBook(@PathVariable("id") Long id) {
-        log.debug("deleteBook: start processing");
+        log.info("Processing delete the book by id {}", id);
         bookService.delete(id);
-        log.debug("deleteBook: finish processing");
+        log.info("Book with id {} deleted", id);
 
         return REDIRECT_TO_BOOKS;
     }

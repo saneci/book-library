@@ -1,4 +1,4 @@
-package ru.saneci.booklibrary.util;
+package ru.saneci.booklibrary.business.util;
 
 import org.springframework.data.domain.Page;
 

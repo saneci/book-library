@@ -1,4 +1,4 @@
-package ru.saneci.booklibrary.util;
+package ru.saneci.booklibrary.business.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

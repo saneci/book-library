@@ -1,15 +1,15 @@
-package ru.saneci.booklibrary.service;
+package ru.saneci.booklibrary.business.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.saneci.booklibrary.domain.Book;
-import ru.saneci.booklibrary.domain.Person;
-import ru.saneci.booklibrary.repository.BookRepository;
+import ru.saneci.booklibrary.business.domain.Book;
+import ru.saneci.booklibrary.business.domain.BusinessPerson;
+import ru.saneci.booklibrary.business.repository.BookRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,14 +17,10 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
-
-    @Autowired
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
 
     public List<Book> findAll(String title) {
         return bookRepository.findAllByTitleContainsIgnoreCase(title);
@@ -59,7 +55,7 @@ public class BookService {
     }
 
     @Transactional
-    public void updatePersonId(Long bookId, Person person) {
+    public void updatePersonId(Long bookId, BusinessPerson person) {
         bookRepository.findById(bookId).ifPresent(b -> {
             b.setPerson(person);
             if (person != null)

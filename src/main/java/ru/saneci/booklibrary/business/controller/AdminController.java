@@ -1,4 +1,4 @@
-package ru.saneci.booklibrary.controller;
+package ru.saneci.booklibrary.business.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
