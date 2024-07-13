@@ -1,35 +1,36 @@
-package ru.saneci.booklibrary.service;
+package ru.saneci.booklibrary.security.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.saneci.booklibrary.domain.Person;
-import ru.saneci.booklibrary.repository.PersonRepository;
-import ru.saneci.booklibrary.security.PersonDetails;
+import ru.saneci.booklibrary.security.domain.SecurityPerson;
+import ru.saneci.booklibrary.security.dto.PersonDetails;
+import ru.saneci.booklibrary.security.repository.SecurityPersonRepository;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class PersonDetailsService implements UserDetailsService {
 
-    private final PersonRepository personRepository;
-
-    @Autowired
-    public PersonDetailsService(PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
+    private final SecurityPersonRepository personRepository;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Person> person = personRepository.findPersonByUsername(username);
+        log.info("Processing request to search for a user by username '{}'", username);
+        Optional<SecurityPerson> person = personRepository.findPersonByUsername(username);
         if (person.isEmpty()) {
+            log.info("User with username '{}' not found", username);
             throw new UsernameNotFoundException("User '" + username + "' not found");
         }
 
+        log.info("User with username '{}' was found", username);
         return new PersonDetails(person.get());
     }
 }

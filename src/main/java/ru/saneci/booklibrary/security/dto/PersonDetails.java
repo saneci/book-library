@@ -1,20 +1,18 @@
-package ru.saneci.booklibrary.security;
+package ru.saneci.booklibrary.security.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.saneci.booklibrary.domain.Person;
+import ru.saneci.booklibrary.security.domain.SecurityPerson;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 
-public class PersonDetails implements UserDetails {
+public record PersonDetails(SecurityPerson person) implements UserDetails {
 
-    private final transient Person person;
-
-    public PersonDetails(Person person) {
-        this.person = person;
-    }
+    @Serial
+    private static final long serialVersionUID = 4691839508395976085L;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -49,9 +47,5 @@ public class PersonDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public Person getPerson() {
-        return person;
     }
 }

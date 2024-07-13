@@ -1,32 +1,31 @@
-package ru.saneci.booklibrary.util;
+package ru.saneci.booklibrary.security.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.saneci.booklibrary.domain.Person;
-import ru.saneci.booklibrary.service.PersonService;
+import ru.saneci.booklibrary.security.domain.SecurityPerson;
+import ru.saneci.booklibrary.security.service.SecurityPersonService;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class PersonValidator implements Validator {
 
-    private final PersonService peopleService;
-
-    @Autowired
-    public PersonValidator(PersonService peopleService) {
-        this.peopleService = peopleService;
-    }
+    private final SecurityPersonService personService;
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Person.class.equals(clazz);
+        return SecurityPerson.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Person person = (Person) target;
+        log.info("Validate person");
+        SecurityPerson person = (SecurityPerson) target;
 
-        if (peopleService.findByUserName(person.getUsername()).isPresent()) {
+        if (personService.findByUserName(person.getUsername()).isPresent()) {
             errors.rejectValue("username", "", "Пользователь с таким логином уже существует");
         }
 

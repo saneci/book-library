@@ -1,9 +1,9 @@
-package ru.saneci.booklibrary.repository;
+package ru.saneci.booklibrary.business.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.saneci.booklibrary.domain.Book;
+import ru.saneci.booklibrary.business.domain.Book;
 
 import java.util.List;
 import java.util.Optional;

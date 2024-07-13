@@ -12,7 +12,7 @@
 
     <groupId>ru.saneci</groupId>
     <artifactId>book-library</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.1</version>
     <name>SB Library</name>
     <description>Saneci Book Library is a digital accounting of books in the library</description>
 
@@ -21,6 +21,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>annotationProcessor</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

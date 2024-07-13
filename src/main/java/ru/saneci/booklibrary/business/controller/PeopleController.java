@@ -1,8 +1,8 @@
-package ru.saneci.booklibrary.controller;
+package ru.saneci.booklibrary.business.controller;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.saneci.booklibrary.domain.Person;
-import ru.saneci.booklibrary.domain.Role;
-import ru.saneci.booklibrary.service.PersonService;
-import ru.saneci.booklibrary.util.BindingResultLogger;
+import ru.saneci.booklibrary.business.domain.BusinessPerson;
+import ru.saneci.booklibrary.business.service.BusinessPersonService;
+import ru.saneci.booklibrary.business.util.BindingResultLogger;
 
 import java.util.Optional;
 
+@Slf4j
 @Controller
 @RequestMapping("/people")
+@RequiredArgsConstructor
 public class PeopleController {
 
-    private final Logger log = LoggerFactory.getLogger(PeopleController.class);
     private final BindingResultLogger brLogger = BindingResultLogger.getLogger(PeopleController.class);
 
     private static final String PEOPLE_LIST_VIEW = "people/list";
@@ -37,94 +37,84 @@ public class PeopleController {
 
     private static final String ERROR_404 = "error/not-found";
 
-    private final PersonService personService;
-
-    public PeopleController(PersonService personService) {
-        this.personService = personService;
-    }
+    private final BusinessPersonService personService;
 
     @GetMapping
     public String getAllReaders(Model model) {
-        log.debug("getAllReaders: start processing");
+        log.info("Processing getting all readers");
         model.addAttribute("people", personService.findAll());
-        log.debug("getAllReaders: finish processing");
+        log.info("Found and returned {} readers", personService.findAll().size());
 
         return PEOPLE_LIST_VIEW;
     }
 
     @GetMapping("/{id}")
     public String getReaderById(@PathVariable("id") Long id, Model model) {
-        log.debug("getReaderById: start processing");
-        Optional<Person> person = personService.findPersonWithBooksById(id);
+        log.info("Processing searching for reader with id {}", id);
+        Optional<BusinessPerson> person = personService.findPersonWithBooksById(id);
 
         if (person.isPresent()) {
             model.addAttribute("person", person.get());
-            log.debug("getReaderById: finish processing");
+            log.info("Reader with id {} found", id);
 
             return PERSON_VIEW;
         } else {
-            log.debug("getReaderById: finish processing");
+            log.info("Reader with id {} not found", id);
 
             return ERROR_404;
         }
     }
 
     @GetMapping("/new")
-    public String getNewPeopleView(@ModelAttribute("person") Person person) {
+    public String getNewPeopleView(@ModelAttribute("person") BusinessPerson person) {
+        log.info("Returning new reader registration page");
         return NEW_PEOPLE_VIEW;
     }
 
     @GetMapping("/{id}/edit")
     public String getUpdatingView(@PathVariable("id") Long id, Model model) {
-        log.debug("getUpdatingView: start processing");
+        log.info("Processing searching for reader with id {} to update", id);
         personService.findById(id).ifPresent(person -> model.addAttribute("person", person));
-        log.debug("getUpdatingView: finish processing");
+        log.info("Reader with id {} found and will be updated", id);
 
         return UPDATING_VIEW;
     }
 
     @PostMapping
-    public String createNewReader(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
-        log.debug("createNewReader: start processing");
+    public String createNewReader(@ModelAttribute("person") @Valid BusinessPerson person, BindingResult bindingResult) {
+        log.info("Processing create new reader with id {}", person.getId());
         if (bindingResult.hasErrors()) {
             brLogger.warn("createNewReader", bindingResult);
             return NEW_PEOPLE_VIEW;
         }
-        crutch(person);
+
         personService.save(person);
-        log.debug("createNewReader: finish processing");
+        log.info("New reader with id {} created", person.getId());
 
         return REDIRECT_TO_PEOPLE;
     }
 
     @PatchMapping("/{id}")
-    public String updateReader(@ModelAttribute("person") @Valid Person person,
+    public String updateReader(@ModelAttribute("person") @Valid BusinessPerson person,
                                BindingResult bindingResult) {
-        log.debug("updateReader: start processing");
+        log.info("Processing update reader with id {}", person.getId());
         if (bindingResult.hasErrors()) {
             brLogger.warn("updateReader", bindingResult);
             return NEW_PEOPLE_VIEW;
         }
-        crutch(person);
+
         personService.update(person);
-        log.debug("updateReader: finish processing");
+        log.info("Reader with id {} updated", person.getId());
 
         return REDIRECT_TO_PERSON.replace("{id}", String.valueOf(person.getId()));
     }
 
     @DeleteMapping("/{id}")
     public String deleteReader(@PathVariable("id") Long id) {
-        log.debug("deleteReader: start processing");
+        log.info("Processing delete reader with id {}", id);
         personService.delete(id);
-        log.debug("deleteReader: finish processing");
+        log.info("Reader with id {} deleted", id);
 
         return REDIRECT_TO_PEOPLE;
-    }
-
-    // TODO: remove after https://github.com/users/saneci/projects/3/views/1?pane=issue&itemId=56174894
-    private void crutch(Person person) {
-        person.setRole(Role.ROLE_READER);
-        person.setUsername("");
-        person.setPassword("");
     }
 }
