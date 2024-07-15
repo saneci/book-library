@@ -1,11 +1,11 @@
-name: Continuous Integration
+name: Java Maven Build & Test
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  integration-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository to the runner
