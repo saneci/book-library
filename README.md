@@ -1,6 +1,6 @@
 ## Books registry
 
-Digital accounting of books in the library
+This is a digital catalog system that helps libraries manage their book inventory.
 
 ### Table of content
 
